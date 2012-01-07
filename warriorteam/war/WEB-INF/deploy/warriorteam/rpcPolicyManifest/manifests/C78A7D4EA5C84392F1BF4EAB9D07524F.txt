@@ -1,0 +1,2 @@
+serviceClass: fr.warriorteam.rpc.NewsService
+path: 552A0DE94F494B9343251F59D86CEBE9.gwt.rpc
