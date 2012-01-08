@@ -26,6 +26,26 @@
     <url-pattern>/warriorteam/news</url-pattern>
   </servlet-mapping>
   
+      <servlet>
+    <servlet-name>uploadServlet</servlet-name>
+    <servlet-class>fr.warriorteam.rpc.impl.FileUploadServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>uploadServlet</servlet-name>
+    <url-pattern>/warriorteam/upload</url-pattern>
+  </servlet-mapping>
+  
+  <servlet> 
+    <servlet-name>fileUploader</servlet-name> 
+    <servlet-class>fr.warriorteam.server.servlet.UploadServlet</servlet-class> 
+</servlet> 
+<servlet-mapping> 
+  <servlet-name>fileUploader</servlet-name> 
+  <url-pattern>/fileupload.do</url-pattern> 
+</servlet-mapping> 
+  
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Warriorteam.html</welcome-file>

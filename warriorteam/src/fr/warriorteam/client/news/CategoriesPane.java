@@ -1,8 +1,37 @@
 package fr.warriorteam.client.news;
 
-import fr.warriorteam.client.WTVerticalPane;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import fr.warriorteam.client.WTVerticalPane;
+import fr.warriorteam.client.menu.MenuDroitePane;
+import fr.warriorteam.client.menu.MenuGauchePane;
+import fr.warriorteam.client.pane.CenterPane;
+import fr.warriorteam.client.pane.FileUploader;
+import fr.warriorteam.rpc.FileUploadService;
+import fr.warriorteam.rpc.FileUploadServiceAsync;
+import fr.warriorteam.rpc.LoginService;
+import fr.warriorteam.rpc.LoginServiceAsync;
+import fr.warriorteam.rpc.NewsService;
+import fr.warriorteam.rpc.NewsServiceAsync;
+import fr.warriorteam.rpc.dto.LoginDTO;
+import fr.warriorteam.rpc.dto.NewsDTO;
+import fr.warriorteam.server.utils.CryptageDonneesUtils;
+import fr.warriorteam.shared.FieldVerifier;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>. Classe d'entrée
@@ -10,7 +39,18 @@ import com.google.gwt.user.client.ui.HTML;
  */
 public class CategoriesPane extends WTVerticalPane {
 
+	/**
+	 * Create a remote service proxy to talk to the server-side Login service.
+	 */
+	private final static FileUploadServiceAsync imagesService = GWT
+			.create(FileUploadService.class);
+	
 	private static CategoriesPane instance;
+	
+	/**
+	 * Permet l'upload de fichiers
+	 */
+	private static Widget upload = FileUploader.getFileUploaderWidget();
 
 	private CategoriesPane() {
 
@@ -44,73 +84,37 @@ public class CategoriesPane extends WTVerticalPane {
 
 		// images.setBorderWidth(1);
 		instance.getElement().setId("corps");
+		
 
+		
+		
+		instance.add(upload);
+
+		imagesService.uploadFile(new AsyncCallback<List<String>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				instance.add(new HTML("FAIL APPEL RPC "
+						+ caught.getLocalizedMessage() + caught.getMessage()));
+			}
+
+			@Override
+			public void onSuccess(List<String> result) {
+				// TODO Auto-generated method stub
+				for(String image : result){
+				
+				instance.add(new HTML("<br/><img src=\"images/"+image+"\" /><br/>"));
+				instance.add(new HTML("<img src=\"../images/alienware.png\"/>"));
+				
+				}
+
+			}
+		});
+
+	
 		// Une photo
-		instance.add(new HTML(
-				"CATEGORIES PANE"
-						+ "<br><br>"
-						+ "hfdsjdsjhdsf kffffffffffffffffffffffffffffff ffffffffffffffff fffffffff fffffffffffffff ffffffffffffffffffffff ffretretert ertretrretr etertertretre"
-						+ "hfdsjd  sjhdsfkfffffffffff ff ffffffffff fffffffffffffff fffffffffffffffffffff fffffffffffffffff ffffffffffffff fffffretre tertertret retretertert retre"
-						+ "hfdsjdsjhdsf kffff ffffffffffffff ffffff ffffffff fffffff fffffffffff  fffffffff fffffffffff fffffff ffffffffffffffffffretretert ertretrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff ff fffffff fffretretertertretrretre ertertretre"
-						+ "hfdsjd sjhdsfkffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff fffffffffffffffffffffffffffffffret etertertretrretrete r tertretre"
-						+ "hfdsjd sjhdsfkffffffffffffffffffffffffffffffffff fffffffffffffffff fffffffffffffffffff ffffffffffffffffffffffffretr etertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffffffffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffff fffffffffffffffretretertertre trretret ertertretre"
-						+ "hfdsjdsjh dsfk fffffffffffffff fff  fffffffffffffffffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffffffffffffffffffff fff fffffffffffffffffffffffffffffffffffffffffretretertertret r retretertertretre"
-						+ "hfdsjdsjhdsfkffffffffffffffff fffffffffffffffffffffffffffffffffffffff fffffffffffffffffffffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffff fffffffffffffffff fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffretretertertretrre tretertertretre"
-						+ "hfdsjds jhdsfkfffffffffffffff fffffffffffffff  fffffffffffffffffffffffffffffff ffffffffffffffffffffffffffffffffffretretertertretrretret rtertretre"
-						+ "hfdsjdsjhds kffffffffffffff fffffffffffffff ffffffffffffffffffffffffffffffffffffffff ffffffff fffffff ffffffffr etreterter tretrr etretertertretre"
-						+ "hfdsjdsjhdsfkff fffff ffff fffffffffffffff ffffffff fffffff fffffffff ffffffffffffffff fffffffffffffffff fffffffffretretert ertret rretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffffffffffffffffffffffffffff fffffffffffffffffffffffffffffffffffffff ffffffffffffffffffffffretretertertretrre  tretertertretre"
-						+ "hfdsjdsjhdsfkffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff fffffffffffff fffff fffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjd sjhdsfkffffffff fffffffffffffffffffffffffffffff ffffff fffffffff fffffffffffffffff fffffffff ffffffffffffffretretertertretr retretertertretre"
-						+ "hfdsjd sjhdsfkffff fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff ffffffffffffffret retertertretrretretertertretre"
-						+ "hfdsjdsjhds fkff fffffff ffffffff fffffffff fffffffffffffffff fffffffffffffffffffffffffff fffffffffffffffffffffffffretreterter tre trretretertertretre"
-						+ "hfdsjd dsjhdsfkffffffffffffffffffffffffffff  fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffretreterte rt retrretretertertretre"
-						+ "hfdsjd sjhdsfkffffffffffffffffffffffffffffff fffffffffffff fffffffffffffffffffffffffffffffffffff  fffffffffffffffretretertertretrret ertertretre"
-						+ "hfdsj  dsjhdsfkfffffff ffffffffffff ff ff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffretretertertretrretre tertertretre"
-						+ "hfdsjdsjhdsfkffffffffffffff ffffffffffffff fffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffffffffffffffffffffffff ffffffffffffffffffffffffffffffffffffffffffretretertertretrret retertertretre"
-						+ "hfdsjdsjhdsfkffffffffffffffffffffffffffffffffffffff fffffffffffffffffffffffff fffffffff fff ffffffffffffffffffffretre ertertretrr etretertertretre"
-						+ "hfdsj dsjhdsfkfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkff fffffffff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffre tretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffff fffffffffffffffffff fffffff fffffffffff ffff ffffff fff ffffffretretertertretrretretertertretre"
-						+ "hf dsjdsjhdsfkff  ffff ffffffffffff fffffff ffffffffff  ffffffffff ffffffffffffffffffffffffff fffffffffffffffff  fffff tertretrretretertertretre"
-						+ "hfdsjdsjhd sfkfffffffffffff fffff ffffffff ffffffff f ffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertr etrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffff fffffffffffffffffffffffffffff fffffff ffff ffffffffffffffffffffffff ffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkff fffffffff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffre tretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffff fffffffffffffffffff fffffff fffffffffff ffff ffffff fff ffffffretretertertretrretretertertretre"
-						+ "hf dsjdsjhdsfkff  ffff ffffffffffff fffffff ffffffffff  ffffffffff ffffffffffffffffffffffffff fffffffffffffffff  fffff tertretrretretertertretre"
-						+ "hfdsjdsjhd sfkfffffffffffff fffff ffffffff ffffffff f ffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertr etrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffff fffffffffffffffffffffffffffff fffffff ffff ffffffffffffffffffffffff ffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkff fffffffff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffre tretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffff fffffffffffffffffff fffffff fffffffffff ffff ffffff fff ffffffretretertertretrretretertertretre"
-						+ "hf dsjdsjhdsfkff  ffff ffffffffffff fffffff ffffffffff  ffffffffff ffffffffffffffffffffffffff fffffffffffffffff  fffff tertretrretretertertretre"
-						+ "hfdsjdsjhd sfkfffffffffffff fffff ffffffff ffffffff f ffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertr etrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffff fffffffffffffffffffffffffffff fffffff ffff ffffffffffffffffffffffff ffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkff fffffffff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffre tretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffff fffffffffffffffffff fffffff fffffffffff ffff ffffff fff ffffffretretertertretrretretertertretre"
-						+ "hf dsjdsjhdsfkff  ffff ffffffffffff fffffff ffffffffff  ffffffffff ffffffffffffffffffffffffff fffffffffffffffff  fffff tertretrretretertertretre"
-						+ "hfdsjdsjhd sfkfffffffffffff fffff ffffffff ffffffff f ffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertr etrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffff fffffffffffffffffffffffffffff fffffff ffff ffffffffffffffffffffffff ffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkff fffffffff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffre tretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffff fffffffffffffffffff fffffff fffffffffff ffff ffffff fff ffffffretretertertretrretretertertretre"
-						+ "hf dsjdsjhdsfkff  ffff ffffffffffff fffffff ffffffffff  ffffffffff ffffffffffffffffffffffffff fffffffffffffffff  fffff tertretrretretertertretre"
-						+ "hfdsjdsjhd sfkfffffffffffff fffff ffffffff ffffffff f ffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertr etrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffff fffffffffffffffffffffffffffff fffffff ffff ffffffffffffffffffffffff ffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkff fffffffff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffre tretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffff fffffffffffffffffff fffffff fffffffffff ffff ffffff fff ffffffretretertertretrretretertertretre"
-						+ "hf dsjdsjhdsfkff  ffff ffffffffffff fffffff ffffffffff  ffffffffff ffffffffffffffffffffffffff fffffffffffffffff  fffff tertretrretretertertretre"
-						+ "hfdsjdsjhd sfkfffffffffffff fffff ffffffff ffffffff f ffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertr etrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffff fffffffffffffffffffffffffffff fffffff ffff ffffffffffffffffffffffff ffffffffffffffffffffretretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkff fffffffff fffffff ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffre tretertertretrretretertertretre"
-						+ "hfdsjdsjhdsfkfffffffffffffffffffffffffffffffff fffffffffffffffffff fffffff fffffffffff ffff ffffff fff ffffffretretertertretrretretertertretre"
-						+ "hf dsjdsjhdsfkff  ffff ffffffffffff fffffff ffffffffff  ffffffffff ffffffffffffffffffffffffff fffffffffffffffff  fffff tertretrretretertertretre"
-						+ "hfdsjdsjhd sfkfffffffffffff fffff ffffffff ffffffff f ffffffffffff ffffffffffffffffffffffffffffffffffffffffffffffffretretertertr etrretretertertretre"
-						+ "hfdsjdsjhdsfkffffffffff fffffffffffffffffffffffffffff fffffff ffff ffffffffffffffffffffffff ffffffffffffffffffffretretertertretrretretertertretre"
-						+ ""));
+		instance.add(new HTML(""));
 
 	}
 
