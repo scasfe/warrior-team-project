@@ -59,7 +59,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		
 		// Dossier image
 		File[] images = null;
-		File file = new File("images");
+		File file = new File("../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images");
 		//if(file.isDirectory()){
 			images = file.listFiles();
 		//}

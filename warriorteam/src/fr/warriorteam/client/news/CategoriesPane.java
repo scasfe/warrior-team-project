@@ -31,6 +31,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -46,6 +47,14 @@ public class CategoriesPane extends WTVerticalPane {
 			.create(FileUploadService.class);
 	
 	private static CategoriesPane instance;
+	private static HTML html;
+	
+	/**
+	 * Max width pour les images
+	 */
+	private static final int MAX_WIDTH = 320;
+	private static final int MAX_HEIGHT = 240;
+	
 	
 	/**
 	 * Permet l'upload de fichiers
@@ -75,7 +84,57 @@ public class CategoriesPane extends WTVerticalPane {
 		// TODO Auto-generated method stub
 
 		// Check de session avant tout
+		imagesService.uploadFile(new AsyncCallback<List<String>>() {
 
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				instance.add(new HTML("FAIL APPEL RPC "
+						+ caught.getLocalizedMessage() + caught.getMessage()));
+			}
+
+			@Override
+			public void onSuccess(List<String> result) {
+				// TODO Auto-generated method stub
+				// on vire l'ancien contenu
+				if(html != null){
+					instance.remove(html);
+				}
+				StringBuilder string = new StringBuilder();
+				
+				// TODO petit algo pour affichage en miniature
+				for(String image : result){
+					
+					Image imageEnCours = new Image("images/"+image);
+					
+					// taille reelle de l'image
+					int width = imageEnCours.getWidth();
+					int height = imageEnCours.getHeight();
+					
+					// si portait
+					if(height > width){
+						if(height > MAX_HEIGHT){
+							double coeff = (double)MAX_HEIGHT/(double)height;
+							height = MAX_HEIGHT;
+							width *= coeff; 
+						}
+					}else{
+						// paysage
+						if(width > MAX_WIDTH){
+							double coeff = (double)MAX_WIDTH/(double)width;
+							width = MAX_WIDTH;
+							height *= coeff;
+						}
+					}
+									
+					string.append("<br/><img src=\"images/"+image+"\"  width=\""+width+"\" height=\""+height+"\"/><br/>");
+					
+				}
+				html = new HTML(string.toString());
+				instance.add(html);
+
+			}
+		});
 	}
 
 	private static void setup() {
@@ -90,31 +149,7 @@ public class CategoriesPane extends WTVerticalPane {
 		
 		instance.add(upload);
 
-		imagesService.uploadFile(new AsyncCallback<List<String>>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				instance.add(new HTML("FAIL APPEL RPC "
-						+ caught.getLocalizedMessage() + caught.getMessage()));
-			}
-
-			@Override
-			public void onSuccess(List<String> result) {
-				// TODO Auto-generated method stub
-				for(String image : result){
-				
-				instance.add(new HTML("<br/><img src=\"images/"+image+"\" /><br/>"));
-				instance.add(new HTML("<img src=\"../images/alienware.png\"/>"));
-				
-				}
-
-			}
-		});
-
-	
-		// Une photo
-		instance.add(new HTML(""));
 
 	}
 
