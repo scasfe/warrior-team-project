@@ -18,6 +18,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import fr.warriorteam.rpc.FileUploadService;
@@ -25,6 +26,7 @@ import fr.warriorteam.rpc.NewsService;
 import fr.warriorteam.rpc.dto.NewsDTO;
 import fr.warriorteam.server.servlet.UploadServlet;
 import fr.warriorteam.server.utils.DAOFactory;
+import fr.warriorteam.server.utils.ZipFileWriter;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -72,6 +74,32 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		//}
 	
 			return imagesList;
+	}
+	
+	
+	public boolean createZip(String fileName){
+		  boolean success = false;
+		
+		try {
+	             ZipFileWriter zip = new ZipFileWriter(fileName);
+	             // On recupere la liste des fichiers
+	             for(String st : uploadFile()){
+	            	 if(true){ // TODO tester ici si le fichier existe deja ou pas
+	            		 
+	            	 }
+	             }
+	             
+	             zip.addFile("c://wouaf.txt");
+	             zip.addFile("c://deletemail.log");
+	             zip.addFile("c://fobec.gif");
+	             zip.close();
+	             success = true;
+	         } catch (IOException ex) {
+	        	 logger.fatal("Erreur IO lors de la creation du ZIP : "+ ex);
+	         }
+		
+		return success;
+	 
 	}
 
 }

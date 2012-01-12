@@ -13,5 +13,7 @@ import fr.warriorteam.rpc.dto.NewsDTO;
 @RemoteServiceRelativePath("upload")
 public interface FileUploadService extends RemoteService {
 	List<String> uploadFile() throws IllegalArgumentException;
+	
+	 boolean createZip(String fileName);
 
 }

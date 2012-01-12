@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.Logger;
+
+import fr.warriorteam.rpc.impl.FileUploadServiceImpl;
 
 public class UploadServlet extends HttpServlet {
 
@@ -26,6 +29,8 @@ public class UploadServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -8841695241975408617L;
+	
+	private final Logger logger = Logger.getLogger(UploadServlet.class);
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException { 
         ServletFileUpload upload = new ServletFileUpload(); 
@@ -41,6 +46,8 @@ public class UploadServlet extends HttpServlet {
  
                 if(!item.getName().matches("^.*\\.zip$")){
  
+                	logger.info("Ajout du fichier : "+item.getName());
+                	
                 File file = new File("../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"+item.getName());
                 // File a laquelle rattacher le output stream
                 FileOutputStream fos = new FileOutputStream(file);
@@ -52,7 +59,7 @@ public class UploadServlet extends HttpServlet {
                 } 
                 
                 }else{
-                	
+                	logger.info("Ajout du fichier ZIP: "+item.getName());
                 	BufferedOutputStream dest = null;
                 	byte[] BUFFER = new byte[8192]; 
                 	ZipInputStream zis = new ZipInputStream(stream); 
@@ -60,7 +67,7 @@ public class UploadServlet extends HttpServlet {
                 	   int count;
                 	   while((entree = zis.getNextEntry()) != null)
                 	   {
-                	    System.out.println(entree); 
+                		   logger.info("Ajout du fichier contenu dans le ZIP : "+entree.toString());
                 	   
                 	   
                 	    
@@ -86,6 +93,7 @@ public class UploadServlet extends HttpServlet {
             } 
         } 
         catch(Exception e){ 
+        	logger.error("Erreur lors de l'upload du fichier "+e.getStackTrace());
             throw new RuntimeException(e); 
         } 
  
