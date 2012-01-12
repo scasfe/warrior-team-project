@@ -117,6 +117,13 @@ public class CategoriesPane extends WTVerticalPane {
 							double coeff = (double)MAX_HEIGHT/(double)height;
 							height = MAX_HEIGHT;
 							width *= coeff; 
+							// cas ou le largeur est superieure encore a MAX_WIDTH
+							if(width>MAX_WIDTH){
+								 coeff = (double)MAX_WIDTH/(double)width;
+								 width = MAX_WIDTH;
+									height *= coeff;
+
+							}
 						}
 					}else{
 						// paysage
@@ -124,10 +131,17 @@ public class CategoriesPane extends WTVerticalPane {
 							double coeff = (double)MAX_WIDTH/(double)width;
 							width = MAX_WIDTH;
 							height *= coeff;
+							// cas ou la hauteur est superieure encore a MAX_HEIGHT
+							if(height>MAX_HEIGHT){
+								 coeff = (double)MAX_HEIGHT/(double)height;
+								 height = MAX_HEIGHT;
+									width *= coeff;
+
+							}
 						}
 					}
-									
-					string.append("<br/><img src=\"images/"+image+"\"  width=\""+width+"\" height=\""+height+"\"/><br/>");
+					string.append("<div align=\"center\" style=\"float:left;height: "+MAX_HEIGHT+"px; width: "+MAX_WIDTH+"px;margin:5px;border:1px solid green\">");				
+					string.append("<img src=\"images/"+image+"\"  width=\""+width+"\" height=\""+height+"\"/></div>");
 					
 				}
 				html = new HTML(string.toString());
