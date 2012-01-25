@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 	 */
 	// private LoginService loginService = new LoginServiceImpl();
 
-	public List<String> uploadFile() throws IllegalArgumentException {
+	public HashMap<String, String> uploadFile() throws IllegalArgumentException {
 
 		// HttpSession session = getThreadLocalRequest().getSession();
 		//
@@ -60,11 +61,20 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		// if(file.isDirectory()){
 		images = file.listFiles();
 		// }
-		List<String> imagesList = new ArrayList<String>();
+		
+		// Map key: url photo, value : commentaires
+		HashMap<String, String> imagesList = new HashMap<String, String>();
 
 		for (File image : images) {
 
-			imagesList.add(image.getName());
+			
+			
+			// allez voir en base le commentaire
+			// TODO - créer service va lire en base commentaire pour les photos
+		    //String commentaire = imageService.searchCommentaires(image.getName());
+			
+			// TODO à virer pour tester return commentaire unique
+			imagesList.put(image.getName(), "Ceci est un commentaire de test pour notre application");
 
 		}
 
@@ -79,7 +89,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		try {
 			ZipFileWriter zip = new ZipFileWriter(fileName);
 			// On recupere la liste des fichiers
-			for (String st : uploadFile()) {
+			for (String st : uploadFile().keySet()) {
 				if (true) { // TODO tester ici si le fichier existe deja ou pas
 
 				}
