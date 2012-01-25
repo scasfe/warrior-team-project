@@ -1,5 +1,7 @@
 package fr.warriorteam.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -19,7 +21,7 @@ public class WTDialogBox {
 
 		// Create the popup dialog box
 		VerticalPanel dialogVPanel = new VerticalPanel();
-
+				
 		for (Object o : params) {
 			if (o instanceof Label) {
 				dialogVPanel.add((Label) o);
@@ -41,7 +43,15 @@ public class WTDialogBox {
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		dialogVPanel.add(closeButton);
 		dialogBox.setWidget(dialogVPanel);
-		dialogBox.setWidth("280");
+//		dialogBox.setWidth("280");
+		dialogBox.setVisible(true);
+		
+		// Add a handler to close the DialogBox
+		closeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}
+		});
 	}
 
 	public Button getCloseButton() {
