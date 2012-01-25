@@ -126,6 +126,12 @@ text-align: center;
    border: 2px solid black; /* Une bordure pour bien marquer les limites du corps et pour faire joli */
 }
 
+.div_image
+{
+margin:5px;
+border:1px solid green;
+float:left;
+}
 
 .couleur_bleue{
  color: blue;
@@ -141,6 +147,12 @@ color: yellow;
 }
 
 .jaune_gras{
+color: yellow;
+font-weight: bold;
+
+}
+
+.page_gras{
 color: yellow;
 font-weight: bold;
 
