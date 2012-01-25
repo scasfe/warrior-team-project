@@ -3,7 +3,10 @@ package fr.warriorteam.client.news;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.warriorteam.client.WTDialogBox;
 import fr.warriorteam.client.WTVerticalPane;
@@ -56,12 +59,12 @@ public class CategoriesPane extends WTVerticalPane {
 	private final static FileUploadServiceAsync imagesService = GWT
 			.create(FileUploadService.class);
 
-	private static  CategoriesPane instance;
-	private static  List<HTML> commentaires;
-	private static  List<String> imagesString;
-	private static  List<Image> images;
-	private static  List<Label> pages;
-	private static  VerticalPanel imagesPanel;
+	private static CategoriesPane instance;
+	private static HashMap<String, String> commentaires;
+	private static List<String> imagesString;
+	private static List<Image> images;
+	private static List<Label> pages;
+	private static VerticalPanel imagesPanel;
 
 	/**
 	 * Gestion de spages d'affichage d'images
@@ -100,7 +103,7 @@ public class CategoriesPane extends WTVerticalPane {
 
 	private static void loadDynamicData() {
 		// Check de session avant tout
-		imagesService.uploadFile(new AsyncCallback<List<String>>() {
+		imagesService.uploadFile(new AsyncCallback<HashMap<String, String>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -110,25 +113,18 @@ public class CategoriesPane extends WTVerticalPane {
 			}
 
 			@Override
-			public void onSuccess(List<String> result) {
+			public void onSuccess(HashMap<String, String> result) {
 				// TODO Auto-generated method stub
 
-
-				for (HTML html : commentaires) {
-					if (instance.getWidgetIndex(html) != -1) {
-						instance.remove(html);
-					}
-
-				}
 				commentaires.clear();
-				imagesString = result;
-
+				imagesString = new ArrayList<String>(result.keySet());
+				commentaires = result;
+				
 				// Affichage de la page courante
 				afficherPageCourante();
 
 			}
 
-			
 		});
 	}
 
@@ -136,30 +132,30 @@ public class CategoriesPane extends WTVerticalPane {
 
 		// page courante initialisée à 1
 		current_page = 1;
-		
+
 		// initialisation des listes
 		// on vire l'ancien contenu
 		if (commentaires == null) {
 			// instance.remove(htmls);
-			commentaires = new ArrayList<HTML>();
+			commentaires = new HashMap<String, String>();
 		}
-		
+
 		// on vire l'ancien contenu
 		if (pages == null) {
 			// instance.remove(htmls);
 			pages = new ArrayList<Label>();
 		}
-		
-		if( images == null){
+
+		if (images == null) {
 			images = new ArrayList<Image>();
 		}
-		
-		if(imagesString == null){
+
+		if (imagesString == null) {
 			imagesString = new ArrayList<String>();
 		}
-		
+
 		imagesPanel = new WTVerticalPane() {
-			
+
 			@Override
 			public void reloadData() {
 				// TODO Auto-generated method stub
@@ -185,31 +181,30 @@ public class CategoriesPane extends WTVerticalPane {
 	public void reloadData() {
 		loadDynamicData();
 	}
-	
-	
+
 	private static void afficherPageCourante() {
 		// Avant tout, effacement du panel images
 		imagesPanel.clear();
-		
+
 		int indexDebut = 0;
 		int indexFin = 0;
-		if(current_page!=1){
-			indexDebut = (current_page-1)*20;
-			if((current_page-1)*20+20>=imagesString.size()){
+		if (current_page != 1) {
+			indexDebut = (current_page - 1) * 20;
+			if ((current_page - 1) * 20 + 20 >= imagesString.size()) {
 				indexFin = imagesString.size();
-			}else{
-				indexFin = (current_page-1)*20+20;
+			} else {
+				indexFin = (current_page - 1) * 20 + 20;
 			}
-		}else{
-			if(20>=imagesString.size()){
+		} else {
+			if (20 >= imagesString.size()) {
 				indexFin = imagesString.size();
-			}else{
-				indexFin =20;
+			} else {
+				indexFin = 20;
 			}
 		}
 
 		images.clear();
-		
+
 		class ImageHandler implements ClickHandler {
 			/**
 			 * Fired when the user clicks on the sendButton.
@@ -217,23 +212,25 @@ public class CategoriesPane extends WTVerticalPane {
 			public void onClick(ClickEvent event) {
 				// methode de traitement
 				Image image = (Image) event.getSource();
-				
-				// obligation de copier l'élément 
+
+				// obligation de copier l'élément
 				// en String pour afficher l'image grande
-				
+
 				String urlImage = image.getUrl();
 				urlImage = urlImage.replaceFirst("/resize", "");
+
+				int index = urlImage.indexOf("images/");
+				 String imageName = urlImage.substring(index+7);
 				
-				HTML html2 = new HTML( "dsdssssssssssssssssssssssssssssssssssssssssssssssssssssssss<BR/>sssssssssssssssssss" +
-						"dssssssssssssssssssssssssssssssssss<BR/>ssssssssssssssssssssssssssssssssssssssss<BR/>ssssssssssssssssssssssss" +
-						"dssssssssssssssssssssssssssssssssssssssssssssssssss<BR/>sssssssssssssssssssss<BR/>ssssssssssssssssssssssss");
-				
-				HTML newHtml = new HTML("<img src=\""+urlImage+"\" width=\""+MAX_WIDTH+"\" height=\""+MAX_HEIGHT+"\" ");
+				HTML html2 = new HTML(commentaires.get(imageName));
+
+				HTML newHtml = new HTML("<img src=\"" + urlImage
+						+ "\" width=\"" + MAX_WIDTH + "\" height=\""
+						+ MAX_HEIGHT + "\" ");
 				WTDialogBox dialogBox = new WTDialogBox(newHtml, html2);
-				
-				
+
 				dialogBox.get().setText("Image n° XXX");
-				
+
 				dialogBox.get().setAnimationEnabled(false);
 				dialogBox.get().center();
 				dialogBox.getCloseButton().setFocus(true);
@@ -241,7 +238,7 @@ public class CategoriesPane extends WTVerticalPane {
 			}
 
 		}
-		
+
 		// Création des handlers
 		class PageHandler implements ClickHandler {
 			/**
@@ -250,16 +247,15 @@ public class CategoriesPane extends WTVerticalPane {
 			public void onClick(ClickEvent event) {
 				// methode de traitement
 				Label source = (Label) event.getSource();
-				
-			
-				 int pageDemandee = Integer.valueOf(source.getText());
-				 current_page = pageDemandee;
-				 afficherPageCourante();
+
+				int pageDemandee = Integer.valueOf(source.getText());
+				current_page = pageDemandee;
+				afficherPageCourante();
 
 			}
 
 		}
-		
+
 		// découpage en pages
 		int nbPages = imagesString.size() / 20;
 		int reste = imagesString.size() % 20;
@@ -272,40 +268,40 @@ public class CategoriesPane extends WTVerticalPane {
 			pagesPanel.setSpacing(10);
 			for (int i = 0; i < nbPages; i++) {
 
-				Label label = new Label(String.valueOf(i+1));
+				Label label = new Label(String.valueOf(i + 1));
 				label.addClickHandler(new PageHandler());
 				label.setVisible(true);
-				
+
 				// on met la page en cours en gras
-				if((i+1) == current_page){
+				if ((i + 1) == current_page) {
 					label.setStyleName("page_gras");
 				}
 				pagesPanel.add(label);
-				
 
 			}
 			imagesPanel.add(pagesPanel);
 		}
+
 		
 		HorizontalPanel ligneImages = new HorizontalPanel();
-		for (int i=indexDebut; i< indexFin; i++) {
-			
-			if(i%3 == 0){
+		for (int i = indexDebut; i < indexFin; i++) {
+
+			if (i % 3 == 0) {
 				ligneImages = new HorizontalPanel();
-				
+
 				imagesPanel.add(ligneImages);
-				
+
 			}
+
 			
-	Image image =new Image("images/resize/" + imagesString.get(i));
-	images.add(image);
+			Image image = new Image("images/resize/" + imagesString.get(i));
+			images.add(image);
 			image.addClickHandler(new ImageHandler());
 			image.setStyleName("div_image");
 			ligneImages.add(image);
-			
 
 		}
-		
-	}		
-		
+
+	}
+
 }

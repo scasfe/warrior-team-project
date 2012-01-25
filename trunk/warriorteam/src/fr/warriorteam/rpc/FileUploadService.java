@@ -1,5 +1,6 @@
 package fr.warriorteam.rpc;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -12,7 +13,7 @@ import fr.warriorteam.rpc.dto.NewsDTO;
  */
 @RemoteServiceRelativePath("upload")
 public interface FileUploadService extends RemoteService {
-	List<String> uploadFile() throws IllegalArgumentException;
+	HashMap<String, String> uploadFile() throws IllegalArgumentException;
 	
 	 boolean createZip(String fileName);
 
