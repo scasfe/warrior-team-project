@@ -22,6 +22,7 @@
   <source path='client/center'/>
   <source path='rpc'/>
   <source path='rpc/dto'/>
+   <source path='dto'/>
   <source path='server/utils'/>
   <source path='shared'/>
 
