@@ -47,10 +47,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 
 		try {
 
-		
 			connection = DAOFactory.getConnection();
-
-			
 			
 			// Création de la requête
 			StringBuilder query = new StringBuilder();

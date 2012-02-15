@@ -9,7 +9,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import fr.warriorteam.dto.CategorieDTO;
 import fr.warriorteam.rpc.NewsService;
+import fr.warriorteam.rpc.dto.CategoriesDTO;
 import fr.warriorteam.rpc.dto.NewsDTO;
 import fr.warriorteam.server.utils.DAOFactory;
 
@@ -107,5 +109,67 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 		results.getLogin().add("dsdsds");
 		return results;
 	}
+	
+	
+	public CategoriesDTO searchCategories() throws IllegalArgumentException {
+
+		CategoriesDTO results = new CategoriesDTO();
+		HttpSession session = getThreadLocalRequest().getSession();
+
+		if (LoginServiceImpl.checkSession(session)) {
+			Connection connection;
+
+			try {
+
+				connection = DAOFactory.getConnection();
+
+				// Création de la requête
+				StringBuilder query = new StringBuilder();
+				query.append("SELECT * FROM categories ORDER BY id DESC");
+
+				// Création d'un objet Statement
+				Statement state = connection.createStatement();
+				// L'objet ResultSet contient le résultat de la requête SQL
+				ResultSet result = state.executeQuery(query.toString());
+				ResultSetMetaData resultMeta = result.getMetaData();
+				
+				// Création d'un objet Statement
+				state = connection.createStatement();
+				// L'objet ResultSet contient le résultat de la requête SQL
+				result = state.executeQuery(query.toString());
+				
+
+				while (result.next()) {
+
+					CategorieDTO categorie = new CategorieDTO();
+					
+					categorie.setId(new Long( (Integer) result.getObject(1)));
+					categorie.setNomCategorie(result.getObject(2).toString());
+					categorie.setDossier(result.getObject(3).toString());
+		
+					results.getCategories().add(categorie);
+					
+				}
+
+				result.close();
+				state.close();
+
+			} catch (SQLException e) {
+				
+				// TODO logger erreur
+				logger.error("Erreur SQL : ", e);
+				
+				throw new IllegalArgumentException(
+						"Problème interne du serveur");
+			} 
+
+		} else {
+			throw new IllegalArgumentException("test pas connecté LOL");
+		}
+
+		
+		return results;
+	}
+
 
 }

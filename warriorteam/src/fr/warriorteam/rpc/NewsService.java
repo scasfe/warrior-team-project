@@ -3,6 +3,8 @@ package fr.warriorteam.rpc;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import fr.warriorteam.dto.CategorieDTO;
+import fr.warriorteam.rpc.dto.CategoriesDTO;
 import fr.warriorteam.rpc.dto.NewsDTO;
 
 /**
@@ -11,5 +13,5 @@ import fr.warriorteam.rpc.dto.NewsDTO;
 @RemoteServiceRelativePath("news")
 public interface NewsService extends RemoteService {
 	NewsDTO searchLastNews() throws IllegalArgumentException;
-
+	CategoriesDTO searchCategories() throws IllegalArgumentException;
 }
