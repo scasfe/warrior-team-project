@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class WTDialogBox {
@@ -21,7 +22,7 @@ public class WTDialogBox {
 
 		// Create the popup dialog box
 		VerticalPanel dialogVPanel = new VerticalPanel();
-				
+
 		for (Object o : params) {
 			if (o instanceof Label) {
 				dialogVPanel.add((Label) o);
@@ -29,6 +30,14 @@ public class WTDialogBox {
 
 			if (o instanceof HTML) {
 				dialogVPanel.add((HTML) o);
+			}
+
+			if (o instanceof TextBox) {
+				dialogVPanel.add((TextBox) o);
+			}
+
+			if (o instanceof Button) {
+				dialogVPanel.add((Button) o);
 			}
 		}
 
@@ -43,9 +52,9 @@ public class WTDialogBox {
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		dialogVPanel.add(closeButton);
 		dialogBox.setWidget(dialogVPanel);
-//		dialogBox.setWidth("280");
+		// dialogBox.setWidth("280");
 		dialogBox.setVisible(true);
-		
+
 		// Add a handler to close the DialogBox
 		closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
