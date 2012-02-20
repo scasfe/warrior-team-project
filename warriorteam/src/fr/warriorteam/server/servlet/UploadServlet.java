@@ -1,33 +1,27 @@
 package fr.warriorteam.server.servlet;
 
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 
-import fr.warriorteam.rpc.impl.FileUploadServiceImpl;
+import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.ImagesUtils;
 
 public class UploadServlet extends HttpServlet {
@@ -41,6 +35,11 @@ public class UploadServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		// Infos de session
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("user_id");
+
 		ServletFileUpload upload = new ServletFileUpload();
 
 		try {
@@ -49,16 +48,26 @@ public class UploadServlet extends HttpServlet {
 			while (iter.hasNext()) {
 				FileItemStream item = iter.next();
 
+				String path = request.getParameter("path");
 				String name = item.getFieldName();
 				InputStream stream = item.openStream();
 
+				// Path de images création du dossier si non existant
+				File directory = new File(
+						"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+								+ path);
+				directory.mkdir();
+
+				// Traitement du fichier
 				if (!item.getName().matches("^.*\\.zip$")) {
 
 					logger.info("Ajout du fichier : " + item.getName());
 
+					// TODO - Couper la taille du nom à 30 caractères
+
 					File file = new File(
 							"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-									+ item.getName());
+									+ path + "/" + item.getName());
 					if (file.getName().matches(
 							"^.*\\.(JPG|jpg|JPEG|BMP|bmp|png|PNG|GIF|gif)$")) {
 
@@ -70,12 +79,14 @@ public class UploadServlet extends HttpServlet {
 						while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
 							fos.write(buffer, 0, len);
 						}
-						
+
 						// TODO comment
-						ImagesUtils.copyWithRedimImage(file);
-						if(fos != null){
+						ImagesUtils.copyWithRedimImage(file, path);
+						if (fos != null) {
 							fos.close();
 						}
+
+						addAuthorAndDateOnDB(file.getName(), path, user_id);
 
 					}
 
@@ -92,7 +103,7 @@ public class UploadServlet extends HttpServlet {
 
 						File file = new File(
 								"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-										+ entree.toString());
+										+ path + "/" + entree.toString());
 						if (file.getName()
 								.matches(
 										"^.*\\.(JPG|jpg|JPEG|BMP|bmp|png|PNG|GIF|gif)$")) {
@@ -106,13 +117,15 @@ public class UploadServlet extends HttpServlet {
 								fos.write(buffer, 0, len);
 							}
 
-							if(fos!=null){
+							if (fos != null) {
 								fos.close();
 							}
 							// zis.close();
 							// fos.close();
 
-							ImagesUtils.copyWithRedimImage(file);
+							ImagesUtils.copyWithRedimImage(file, path);
+
+							addAuthorAndDateOnDB(file.getName(), path, user_id);
 						}
 
 					}
@@ -132,6 +145,51 @@ public class UploadServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doPost(request, response);
+	}
+
+	private void addAuthorAndDateOnDB(String imageName, String categorie,
+			String userId) {
+
+		Connection connection;
+
+		try {
+
+			connection = DAOFactory.getConnection();
+
+			// TODO - Mettre la bonne date dans la requête
+
+			// Création de la requête
+			StringBuilder query = new StringBuilder();
+			query.append("INSERT INTO image (categorie_fk, nom_image, posteur, date) VALUES("
+					+ "'"
+					+ categorie
+					+ "','"
+					+ imageName
+					+ "','"
+					+ userId
+					+ "','" + "2012-02-25" + "')");
+
+			// Création d'un objet Statement
+			java.sql.PreparedStatement state = connection
+					.prepareStatement(query.toString());
+			// L'objet ResultSet contient le résultat de la requête SQL
+			int result = state.executeUpdate();
+			// ResultSetMetaData resultMeta = result.getMetaData();
+
+			// result.close();
+			state.close();
+
+			logger.debug("Image ajoutée en base : " + userId + " - "
+					+ imageName + " - " + categorie);
+
+		} catch (SQLException e) {
+
+			// TODO logger erreur
+			logger.error("Erreur SQL : ", e);
+
+			throw new IllegalArgumentException("Problème interne du serveur");
+		}
+
 	}
 
 }

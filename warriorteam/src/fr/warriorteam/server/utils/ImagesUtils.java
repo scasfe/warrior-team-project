@@ -1,6 +1,5 @@
 package fr.warriorteam.server.utils;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
@@ -8,15 +7,13 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import javax.imageio.ImageIO;
 
 /**
  * TODO
- * @author Yvan
- * Date : 13/01/2012
+ * 
+ * @author Yvan Date : 13/01/2012
  */
 public class ImagesUtils {
 
@@ -25,9 +22,16 @@ public class ImagesUtils {
 	 */
 	private static final int MAX_WIDTH = 320;
 	private static final int MAX_HEIGHT = 240;
-	
-	public static void copyWithRedimImage(File file) {
+
+	public static void copyWithRedimImage(File file, String path) {
 		try {
+
+			// Création du dossier resize s'il n'existe pas
+			File directory = new File(
+					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+							+ path + "/resize");
+			directory.mkdir();
+
 			// Exemple pour agrandir
 			// BufferedImage img = ImageIO.read(new File("c:/j.png"));
 			// BufferedImage imgnew = scale(img, 10);
@@ -37,16 +41,15 @@ public class ImagesUtils {
 			BufferedImage imag = ImageIO.read(file);
 			int widht = imag.getWidth();
 			int height = imag.getHeight();
-		double factor = calculerCoeffRedimImage(widht, height);
-			
-			
+			double factor = calculerCoeffRedimImage(widht, height);
+
 			BufferedImage imagnew = scale(imag, factor);
 			ImageIO.write(
 					imagnew,
 					"png",
 					new File(
-							"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/resize/"
-									+ file.getName()));
+							"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+									+ path + "/resize/" + file.getName()));
 		} catch (IOException ex) {
 			// Logger.getLogger(ImageRedim.class.getName()).log(Level.SEVERE,
 			// null, ex);
@@ -75,51 +78,51 @@ public class ImagesUtils {
 
 		return bImageNew;
 	}
-	
 
 	public static double calculerCoeffRedimImage(int width, int height) {
-		// TODO Mettre le code de redimensionnement avec solution pour getter le coeff de reduction
-				
+		// TODO Mettre le code de redimensionnement avec solution pour getter le
+		// coeff de reduction
+
 		double coeff = 1;
 		double coeefHeight = 1;
 		// taille reelle de l'image
-//		int width = imageEnCours.getWidth();
-//		int height = imageEnCours.getHeight();
-		
+		// int width = imageEnCours.getWidth();
+		// int height = imageEnCours.getHeight();
+
 		// si portait
-		if(height > width){
-			if(height > MAX_HEIGHT){
-				 coeff = (double)MAX_HEIGHT/(double)height;
+		if (height > width) {
+			if (height > MAX_HEIGHT) {
+				coeff = (double) MAX_HEIGHT / (double) height;
 				height = MAX_HEIGHT;
-				width *= coeff; 
+				width *= coeff;
 				// cas ou le largeur est superieure encore a MAX_WIDTH
-				if(width>MAX_WIDTH){
-					double coeff2 = (double)MAX_WIDTH/(double)width;
-					 width = MAX_WIDTH;
-						height *= coeff2;
-						
-						coeff *= coeff2;
+				if (width > MAX_WIDTH) {
+					double coeff2 = (double) MAX_WIDTH / (double) width;
+					width = MAX_WIDTH;
+					height *= coeff2;
+
+					coeff *= coeff2;
 
 				}
 			}
-		}else{
+		} else {
 			// paysage
-			if(width > MAX_WIDTH){
-				 coeff = (double)MAX_WIDTH/(double)width;
+			if (width > MAX_WIDTH) {
+				coeff = (double) MAX_WIDTH / (double) width;
 				width = MAX_WIDTH;
 				height *= coeff;
 				// cas ou la hauteur est superieure encore a MAX_HEIGHT
-				if(height>MAX_HEIGHT){
-					double coeff2 = (double)MAX_HEIGHT/(double)height;
-					 height = MAX_HEIGHT;
-						width *= coeff2;
-						
-						coeff *= coeff2;
+				if (height > MAX_HEIGHT) {
+					double coeff2 = (double) MAX_HEIGHT / (double) height;
+					height = MAX_HEIGHT;
+					width *= coeff2;
+
+					coeff *= coeff2;
 
 				}
 			}
 		}
-		
+
 		return coeff;
 
 	}

@@ -4,14 +4,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+
 import javax.servlet.http.HttpSession;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 import fr.warriorteam.rpc.LoginService;
 import fr.warriorteam.rpc.dto.LoginDTO;
 import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.shared.FieldVerifier;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import java.sql.DriverManager;
-import java.util.HashSet;
 
 /**
  * The server side implementation of the RPC service.
@@ -48,7 +50,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		try {
 
 			connection = DAOFactory.getConnection();
-			
+
 			// Création de la requête
 			StringBuilder query = new StringBuilder();
 			query.append("SELECT * FROM comptes where login = ");
@@ -78,6 +80,9 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		}
 
 		HttpSession session = getThreadLocalRequest().getSession();
+		// TODO - Récupérer la bonne session à partir de la requête
+		session.setAttribute("user_id", "1");
+		session.setAttribute("pseudo", "Vero_bouly");
 		sessionActiveList.add(session);
 
 		return "Hello, " + input.getLogin() + "!<br><br>" + "I am running "

@@ -7,26 +7,17 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
-public class FileUploader {
+public class FileUploaderPane extends FormPanel {
 
+	// FormPanel form = new FormPanel();
+	private FileUpload fu = new FileUpload();
 
-	private static FormPanel form = new FormPanel();
-	private static FileUpload fu = new FileUpload();
-
-	private FileUploader() {
-
-	}
-
-	@SuppressWarnings("deprecation")
-	public static Widget getFileUploaderWidget() {
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		form.setMethod(FormPanel.METHOD_POST);
-		form.setAction("fileupload.do");
+	public FileUploaderPane(String path) {
+		this.setEncoding(FormPanel.ENCODING_MULTIPART);
+		this.setMethod(FormPanel.METHOD_POST);
+		this.setAction("fileupload.do?path=" + path);
 
 		VerticalPanel holder = new VerticalPanel();
 
@@ -34,12 +25,16 @@ public class FileUploader {
 		holder.add(fu);
 		holder.add(new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
+
+				WTModalWaitPane.getInstance().setVisible(true);
+				WTModalWaitPane.getInstance().center();
 				GWT.log("You selected: " + fu.getFilename(), null);
-				form.submit();
+				submit();
+
 			}
 		}));
 
-		form.addSubmitHandler(new FormPanel.SubmitHandler() {
+		addSubmitHandler(new FormPanel.SubmitHandler() {
 			public void onSubmit(SubmitEvent event) {
 				if (!"".equalsIgnoreCase(fu.getFilename())) {
 					GWT.log("UPLOADING FILE????", null);
@@ -51,18 +46,19 @@ public class FileUploader {
 			}
 		});
 
-		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+		addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				if(!event.getResults().equals("")){
-				Window.alert(event.getResults());
-			}else{
-				Window.alert("Fichier "+fu.getFilename()+ " uploadé !");
-			}
+
+				WTModalWaitPane.getInstance().hide();
+				if (!event.getResults().equals("")) {
+					Window.alert(event.getResults());
+				} else {
+					Window.alert("Fichier " + fu.getFilename() + " uploadé !");
+				}
 			}
 		});
 
-		form.add(holder);
+		add(holder);
 
-		return form;
 	}
 }
