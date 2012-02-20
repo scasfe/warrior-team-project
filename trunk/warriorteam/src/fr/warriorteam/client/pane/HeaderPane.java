@@ -1,12 +1,10 @@
 package fr.warriorteam.client.pane;
 
-import fr.warriorteam.client.WTLoginPane;
-
 import com.google.gwt.user.client.ui.HTML;
-
 import com.google.gwt.user.client.ui.HorizontalPanel;
-
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import fr.warriorteam.client.WTLoginPane;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>. Classe d'entrée
@@ -49,15 +47,20 @@ public class HeaderPane extends HorizontalPanel {
 
 		instance.setSpacing(10);
 		instance.setVerticalAlignment(ALIGN_TOP);
-		// TODO
+		// TODO - requêter les dernières photos ajoutées
 		// panelHaut.add(WTLastPhotosPublished.getInstance());
 
 		// Temporaire : à virer une fois le widget LastPhoto codé
 		VerticalPanel lastPhotos = new VerticalPanel();
 		lastPhotos.setSize("300", "150");
-		lastPhotos.add(new HTML("<h2>Dernieres photos :</h2>"
-				+ "Postee par Bouly le 04/09/2011 a 00h18"
-				+ "<br><br> <img src=\"exemple.jpg\"/>"));
+		lastPhotos
+				.add(new HTML(
+						"<h2>Dernieres photos :</h2>"
+								+ "Postee par Bouly le 04/09/2011 a 00h18"
+								+ "<br><br> <img src=\"images/exemple.png\""
+								+ " width=\"60\" height=\"40\" /> -- <img src=\"images/exemple2.png\""
+								+ " width=\"60\" height=\"40\" /> "));
+
 		lastPhotos.setVerticalAlignment(ALIGN_TOP);
 
 		VerticalPanel title = new VerticalPanel();

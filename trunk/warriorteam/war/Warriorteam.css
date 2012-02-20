@@ -10,6 +10,14 @@ h1 {
   text-align: center;
 }
 
+.titleCategorie {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+
+  text-align: center;
+}
+
 .sendButton {
   display: block;
   font-size: 16pt;
@@ -30,6 +38,7 @@ h1 {
 
 .root{
 	 background-image: url("images/fond.png");;
+	   scrollbar-face-color: red;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
@@ -124,6 +133,9 @@ text-align: center;
    /*background-repeat: repeat-x; /* Une petite image de fond qui se répètera horizontalement en haut */
    
    border: 2px solid black; /* Une bordure pour bien marquer les limites du corps et pour faire joli */
+   
+ 
+   
 }
 
 .div_image
@@ -244,6 +256,46 @@ font-weight: bold;
 }
 
 
+.wt-wait {
+	/*background-color: transparent !important;*/
+	 background-color: black; 
+ filter:alpha(opacity=50);-moz-opacity:.50;opacity:.50; 
+	
+	
+	/*background-image: url(../img/loading-big.gif) !important;*/
+	/*background-repeat: no-repeat !important;*/
+	background-position: center center !important;
+	position : absolute;
+	border: none !important;
+	width:	100% !important;
+	height: 100%  !important;
+ display: table-cell; 
+    text-align: center;    
+    z-index: 2;
+}
+
+.modal-dialogBox
+{
+	background-color			:	#ff0;
+	font-size					:	90%;
+	font-weight					:	bold;
+	border-bottom				:	3px solid #009;
+	padding						:	5px;
+	text-align					:	center;
+	cursor						:	move;
+	vertical-align: middle; 
+        margin-top : 200px;
+        position : absolute;
+        z-index: 1;
+       
+	 	
+}
+
+.centered { 
+    display: table-cell; 
+    vertical-align: middle; 
+        margin-top : 200px;
+}
 
 
 

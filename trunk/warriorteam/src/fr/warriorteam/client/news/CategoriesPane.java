@@ -1,51 +1,25 @@
 package fr.warriorteam.client.news;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import fr.warriorteam.client.WTDialogBox;
-import fr.warriorteam.client.WTVerticalPane;
-import fr.warriorteam.client.menu.MenuDroitePane;
-import fr.warriorteam.client.menu.MenuGauchePane;
-import fr.warriorteam.client.pane.CenterPane;
-import fr.warriorteam.client.pane.FileUploader;
-import fr.warriorteam.rpc.FileUploadService;
-import fr.warriorteam.rpc.FileUploadServiceAsync;
-import fr.warriorteam.rpc.LoginService;
-import fr.warriorteam.rpc.LoginServiceAsync;
-import fr.warriorteam.rpc.NewsService;
-import fr.warriorteam.rpc.NewsServiceAsync;
-import fr.warriorteam.rpc.dto.LoginDTO;
-import fr.warriorteam.rpc.dto.NewsDTO;
-import fr.warriorteam.server.utils.CryptageDonneesUtils;
-import fr.warriorteam.shared.FieldVerifier;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DialogBox.Caption;
-import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+
+import fr.warriorteam.client.WTDialogBox;
+import fr.warriorteam.client.WTVerticalPane;
+import fr.warriorteam.client.pane.FileUploaderPane;
+import fr.warriorteam.dto.CategorieDTO;
+import fr.warriorteam.rpc.FileUploadService;
+import fr.warriorteam.rpc.FileUploadServiceAsync;
+import fr.warriorteam.rpc.WTModalAsyncCallback;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>. Classe d'entrée
@@ -65,6 +39,7 @@ public class CategoriesPane extends WTVerticalPane {
 	private static List<Image> images;
 	private static List<Label> pages;
 	private static VerticalPanel imagesPanel;
+	private static CategorieDTO categorie;
 
 	/**
 	 * Gestion de spages d'affichage d'images
@@ -80,7 +55,7 @@ public class CategoriesPane extends WTVerticalPane {
 	/**
 	 * Permet l'upload de fichiers
 	 */
-	private static Widget upload = FileUploader.getFileUploaderWidget();
+	private static FileUploaderPane upload;
 
 	private CategoriesPane() {
 
@@ -97,35 +72,69 @@ public class CategoriesPane extends WTVerticalPane {
 			setup();
 
 		}
-		loadDynamicData();
 		return instance;
 	}
 
 	private static void loadDynamicData() {
 		// Check de session avant tout
-		imagesService.uploadFile(new AsyncCallback<HashMap<String, String>>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				instance.add(new HTML("FAIL APPEL RPC "
-						+ caught.getLocalizedMessage() + caught.getMessage()));
-			}
+		// WTModalWaitPane.getInstance().setText("Veuillez patienter");
 
-			@Override
-			public void onSuccess(HashMap<String, String> result) {
-				// TODO Auto-generated method stub
+		// WTModalWaitPane.getInstance().setVisible(true);
+		// WTModalWaitPane.getInstance().center();
 
-				commentaires.clear();
-				imagesString = new ArrayList<String>(result.keySet());
-				commentaires = result;
-				
-				// Affichage de la page courante
-				afficherPageCourante();
+		imagesService.uploadFile(categorie.getDossier(),
+				new WTModalAsyncCallback<HashMap<String, String>>() {
 
-			}
+					// @Override
+					// public void onFailure(Throwable caught) {
+					// // TODO Auto-generated method stub
+					// imagesPanel.clear();
+					//
+					// imagesPanel.add(new HTML("FAIL APPEL RPC "
+					// + caught.getLocalizedMessage()
+					// + caught.getMessage()));
+					// }
+					//
+					// @Override
+					// public void onSuccess(HashMap<String, String> result) {
+					// // TODO Auto-generated method stub
+					//
+					// // WTModalWaitPane.getInstance().hide();
+					//
+					// // Récupération des commentaires
+					// commentaires.clear();
+					// imagesString = new ArrayList<String>(result.keySet());
+					// commentaires = result;
+					//
+					// // Affichage de la page courante
+					// afficherPageCourante();
+					//
+					// }
 
-		});
+					@Override
+					public void handleResult(HashMap<String, String> result) {
+						// TODO Auto-generated method stub
+						// Récupération des commentaires
+						commentaires.clear();
+						imagesString = new ArrayList<String>(result.keySet());
+						commentaires = result;
+
+						// Affichage de la page courante
+						afficherPageCourante();
+					}
+
+				});
+
+		// WTModalWaitPane.getInstance().hide();
+	}
+
+	public static int getCurrent_page() {
+		return current_page;
+	}
+
+	public static void setCurrent_page(int current_page) {
+		CategoriesPane.current_page = current_page;
 	}
 
 	private static void setup() {
@@ -169,7 +178,7 @@ public class CategoriesPane extends WTVerticalPane {
 		instance.getElement().setId("corps");
 
 		instance.setSpacing(10);
-		instance.add(upload);
+		// instance.add(upload);
 		instance.add(imagesPanel);
 
 	}
@@ -185,6 +194,15 @@ public class CategoriesPane extends WTVerticalPane {
 	private static void afficherPageCourante() {
 		// Avant tout, effacement du panel images
 		imagesPanel.clear();
+
+		// Titre du panel image
+		Label title = new Label(categorie.getNomCategorie());
+		title.setStyleName("titleCategorie");
+		imagesPanel.add(title);
+
+		// Mise à jour de l'upload
+		upload = new FileUploaderPane(categorie.getDossier());
+		imagesPanel.add(upload);
 
 		int indexDebut = 0;
 		int indexFin = 0;
@@ -219,14 +237,17 @@ public class CategoriesPane extends WTVerticalPane {
 				String urlImage = image.getUrl();
 				urlImage = urlImage.replaceFirst("/resize", "");
 
-				int index = urlImage.indexOf("images/");
-				 String imageName = urlImage.substring(index+7);
-				
+				int index = urlImage
+						.indexOf("images/" + categorie.getDossier());
+				String imageName = urlImage.substring(index + 8
+						+ categorie.getDossier().length());
+
 				HTML html2 = new HTML(commentaires.get(imageName));
 
-				HTML newHtml = new HTML("<img src=\"" + urlImage
-						+ "\" width=\"" + MAX_WIDTH + "\" height=\""
-						+ MAX_HEIGHT + "\" ");
+				String htmlImage = "<img src=\" " + urlImage + "\" width=\""
+						+ MAX_WIDTH + "\" height=\"" + MAX_HEIGHT + "\" />";
+
+				HTML newHtml = new HTML(htmlImage);
 				WTDialogBox dialogBox = new WTDialogBox(newHtml, html2);
 
 				dialogBox.get().setText("Image n° XXX");
@@ -282,7 +303,6 @@ public class CategoriesPane extends WTVerticalPane {
 			imagesPanel.add(pagesPanel);
 		}
 
-		
 		HorizontalPanel ligneImages = new HorizontalPanel();
 		for (int i = indexDebut; i < indexFin; i++) {
 
@@ -293,8 +313,8 @@ public class CategoriesPane extends WTVerticalPane {
 
 			}
 
-			
-			Image image = new Image("images/resize/" + imagesString.get(i));
+			Image image = new Image("images/" + categorie.getDossier()
+					+ "/resize/" + imagesString.get(i));
 			images.add(image);
 			image.addClickHandler(new ImageHandler());
 			image.setStyleName("div_image");
@@ -302,6 +322,14 @@ public class CategoriesPane extends WTVerticalPane {
 
 		}
 
+	}
+
+	public static CategorieDTO getCategorie() {
+		return categorie;
+	}
+
+	public static void setCategorie(CategorieDTO categorie) {
+		CategoriesPane.categorie = categorie;
 	}
 
 }

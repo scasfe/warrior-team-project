@@ -1,11 +1,13 @@
 package fr.warriorteam.client.pane;
 
+import com.google.gwt.user.client.ui.HorizontalPanel;
+
 import fr.warriorteam.client.WTVerticalPane;
 import fr.warriorteam.client.menu.MenuDroitePane;
 import fr.warriorteam.client.menu.MenuGauchePane;
+import fr.warriorteam.client.news.CategoriesPane;
 import fr.warriorteam.client.news.NewsPane;
-
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import fr.warriorteam.dto.CategorieDTO;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>. Classe d'entrée
@@ -37,7 +39,7 @@ public class CenterPane extends HorizontalPanel {
 			setup();
 
 		}
-		loadDynamicData();
+		// loadDynamicData();
 		return instance;
 	}
 
@@ -45,7 +47,7 @@ public class CenterPane extends HorizontalPanel {
 		// TODO Auto-generated method stub
 
 		// Check de session avant tout
-		rechargerActiveCenterWidget();
+		// rechargerActiveCenterWidget();
 	}
 
 	private static void setup() {
@@ -70,8 +72,20 @@ public class CenterPane extends HorizontalPanel {
 		CenterPane.getInstance().remove(MenuDroitePane.getInstance());
 		CenterPane.getInstance().remove(activeCenterWidget);
 		CenterPane.activeCenterWidget = newWidget;
+		activeCenterWidget.reloadData();
 		CenterPane.instance.add(activeCenterWidget);
 		CenterPane.instance.add(MenuDroitePane.getInstance());
+	}
+
+	/**
+	 * Change le widget central actif pour une catégorie
+	 */
+	public void changeActiveCenterWidgetForCategorie(CategoriesPane newWidget,
+			CategorieDTO categorie) {
+		// On remet la page à 1
+		CategoriesPane.setCurrent_page(1);
+		CategoriesPane.setCategorie(categorie);
+		changeActiveCenterWidget(newWidget);
 	}
 
 	private static void rechargerActiveCenterWidget() {
