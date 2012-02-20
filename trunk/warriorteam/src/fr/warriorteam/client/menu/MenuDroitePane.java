@@ -8,9 +8,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import fr.warriorteam.client.WTCreationCategorieDialogBox;
 import fr.warriorteam.client.WTDialogBox;
-import fr.warriorteam.client.news.NewsPane;
-import fr.warriorteam.client.pane.CenterPane;
 import fr.warriorteam.rpc.LoginService;
 import fr.warriorteam.rpc.LoginServiceAsync;
 
@@ -34,7 +33,7 @@ public class MenuDroitePane extends VerticalPanel {
 	 * Les attributs du menu de droite
 	 */
 	private static Label titleCommentaires;
-	private static java.awt.Label	creationCategorieLabel;
+	private static Label creationCategorieLabel;
 
 	private MenuDroitePane() {
 
@@ -80,7 +79,7 @@ public class MenuDroitePane extends VerticalPanel {
 			public void onSuccess(Boolean sessionValide) {
 				if (sessionValide) {
 					titleCommentaires.setText("Connecté !!!");
-					
+
 					creationCategorieLabel.setVisible(true);
 				} else {
 					// le titre du menu
@@ -97,7 +96,7 @@ public class MenuDroitePane extends VerticalPanel {
 	private static void setup() {
 
 		// Vertical Panel de droite
-		
+
 		// Label pseudo
 		titleCommentaires = new Label();
 		titleCommentaires.setStyleName("element_menu");
@@ -105,11 +104,11 @@ public class MenuDroitePane extends VerticalPanel {
 
 		// Panel commentaires
 		// TODO - créer Panel commentaires
-		
+
 		// Label création catégories
 		creationCategorieLabel = new Label("Créer catégorie");
 		creationCategorieLabel.setStyleName("element_menu");
-		
+
 		class CreationCategorieHandler implements ClickHandler {
 			/**
 			 * Fired when the user clicks on the sendButton.
@@ -122,9 +121,8 @@ public class MenuDroitePane extends VerticalPanel {
 		}
 		creationCategorieLabel.addClickHandler(new CreationCategorieHandler());
 		instance.add(creationCategorieLabel);
-		
+
 		instance.getElement().setId("menuD");
-		
 
 	}
 
