@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fr.warriorteam.client.WTDialogBox;
+import fr.warriorteam.client.news.NewsPane;
+import fr.warriorteam.client.pane.CenterPane;
 import fr.warriorteam.rpc.LoginService;
 import fr.warriorteam.rpc.LoginServiceAsync;
 
@@ -32,6 +34,7 @@ public class MenuDroitePane extends VerticalPanel {
 	 * Les attributs du menu de droite
 	 */
 	private static Label titleCommentaires;
+	private static java.awt.Label	creationCategorieLabel;
 
 	private MenuDroitePane() {
 
@@ -77,11 +80,13 @@ public class MenuDroitePane extends VerticalPanel {
 			public void onSuccess(Boolean sessionValide) {
 				if (sessionValide) {
 					titleCommentaires.setText("Connecté !!!");
+					
+					creationCategorieLabel.setVisible(true);
 				} else {
 					// le titre du menu
 
 					titleCommentaires.setText("Vous n'êtes pas connecté");
-
+					creationCategorieLabel.setVisible(false);
 				}
 			}
 
@@ -92,14 +97,34 @@ public class MenuDroitePane extends VerticalPanel {
 	private static void setup() {
 
 		// Vertical Panel de droite
+		
+		// Label pseudo
 		titleCommentaires = new Label();
 		titleCommentaires.setStyleName("element_menu");
-
-		// commentaires.setPixelSize(250,400);
-		// instance.setBorderWidth(1);
-
 		instance.add(titleCommentaires);
+
+		// Panel commentaires
+		// TODO - créer Panel commentaires
+		
+		// Label création catégories
+		creationCategorieLabel = new Label("Créer catégorie");
+		creationCategorieLabel.setStyleName("element_menu");
+		
+		class CreationCategorieHandler implements ClickHandler {
+			/**
+			 * Fired when the user clicks on the sendButton.
+			 */
+			public void onClick(ClickEvent event) {
+				// methode de traitement
+				// TODO - Créer WTCreationCategorieDialogBox
+				WTCreationCategorieDialogBox.getInstance().show();
+			}
+		}
+		creationCategorieLabel.addClickHandler(new CreationCategorieHandler());
+		instance.add(creationCategorieLabel);
+		
 		instance.getElement().setId("menuD");
+		
 
 	}
 
