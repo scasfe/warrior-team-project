@@ -26,11 +26,12 @@ public class FieldVerifier {
 	 * Verifies that the specified name is valid for our service.
 	 * 
 	 * In this example, we only require that the name is at least four
-	 * characters. In your application, you can use more complex checks to ensure
-	 * that usernames, passwords, email addresses, URLs, and other fields have the
-	 * proper syntax.
+	 * characters. In your application, you can use more complex checks to
+	 * ensure that usernames, passwords, email addresses, URLs, and other fields
+	 * have the proper syntax.
 	 * 
-	 * @param name the name to validate
+	 * @param name
+	 *            the name to validate
 	 * @return true if valid, false if invalid
 	 */
 	public static boolean isValidName(String name) {
@@ -38,5 +39,12 @@ public class FieldVerifier {
 			return false;
 		}
 		return name.length() > 3;
+	}
+
+	public static boolean isValidDate(String dateStr) {
+		if (dateStr == null) {
+			return false;
+		}
+		return dateStr.matches("^[0-9][0-9]/[0-9][0-9][0-9][0-9]$");
 	}
 }

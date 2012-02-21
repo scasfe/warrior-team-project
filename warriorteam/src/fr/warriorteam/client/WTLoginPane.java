@@ -63,11 +63,12 @@ public class WTLoginPane extends VerticalPanel {
 				dialogBox.get().setText("Le serveur ne répond pas");
 
 				// Add a handler to close the DialogBox
-//				dialogBox.getCloseButton().addClickHandler(new ClickHandler() {
-//					public void onClick(ClickEvent event) {
-//						dialogBox.get().hide();
-//					}
-//				});
+				// dialogBox.getCloseButton().addClickHandler(new ClickHandler()
+				// {
+				// public void onClick(ClickEvent event) {
+				// dialogBox.get().hide();
+				// }
+				// });
 
 			}
 
@@ -184,7 +185,7 @@ public class WTLoginPane extends VerticalPanel {
 				String password = passwordInput.getText();
 
 				if (!FieldVerifier.isValidName(login)
-						|| !FieldVerifier.isValidName(login)) {
+						|| !FieldVerifier.isValidName(password)) {
 					errorLabel.setText("Please enter at least four characters");
 					return;
 				}

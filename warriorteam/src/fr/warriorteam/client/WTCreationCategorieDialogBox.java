@@ -1,13 +1,33 @@
 package fr.warriorteam.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
+import fr.warriorteam.dto.CategorieDTO;
+import fr.warriorteam.rpc.CategorieService;
+import fr.warriorteam.rpc.CategorieServiceAsync;
+import fr.warriorteam.rpc.WTModalAsyncCallback;
+import fr.warriorteam.shared.FieldVerifier;
+
 public class WTCreationCategorieDialogBox {
+
+	/**
+	 * Create a remote service proxy to talk to the server-side Login service.
+	 */
+	private final static CategorieServiceAsync categorieService = GWT
+			.create(CategorieService.class);
 
 	private static WTCreationCategorieDialogBox instance;
 	private static WTDialogBox dialogBox;
+	private static Label nom;
+	private static TextBox nomInput;
+	private static Label date;
+	private static TextBox dateInput;
+	private static Button submitBouton;
 	private static Label errorLabel;
 
 	/**
@@ -21,11 +41,11 @@ public class WTCreationCategorieDialogBox {
 
 		// Ajout des fields
 
-		final Label nom = new Label("Nom Categorie : ");
-		final TextBox nomInput = new TextBox();
-		final Label date = new Label("Date : ");
-		final TextBox dateInput = new TextBox();
-		final Button submitBouton = new Button("Creer");
+		nom = new Label("Nom Categorie : ");
+		nomInput = new TextBox();
+		date = new Label("Date (MM/AAAA): ");
+		dateInput = new TextBox();
+		submitBouton = new Button("Creer");
 		nomInput.setSize("50", "10");
 		dateInput.setSize("50", "10");
 
@@ -45,6 +65,9 @@ public class WTCreationCategorieDialogBox {
 		// fields.add(passwordInput);
 		// fields.add(reply);
 
+		// Ajout du click handler sur le bouton création
+		createCreationHandler(submitBouton);
+
 		errorLabel = new Label("Test");
 		dialogBox = new WTDialogBox(nom, nomInput, date, dateInput,
 				submitBouton, errorLabel);
@@ -52,6 +75,61 @@ public class WTCreationCategorieDialogBox {
 		dialogBox.get().setAnimationEnabled(false);
 		dialogBox.get().center();
 		dialogBox.getCloseButton().setFocus(true);
+	}
+
+	private static void createCreationHandler(Button button) {
+		// TODO Auto-generated method stub
+
+		class CreateCategorieHandler implements ClickHandler {
+			/**
+			 * Fired when the user clicks on the sendButton.
+			 */
+			public void onClick(ClickEvent event) {
+				addCategorie();
+			}
+
+		}
+		button.addClickHandler(new CreateCategorieHandler());
+
+	}
+
+	public static void addCategorie() {
+		boolean error = false;
+		StringBuilder msgErr = new StringBuilder();
+		if (!FieldVerifier.isValidName(nomInput.getText())
+				|| nomInput.getText().length() > 15) {
+			msgErr.append("Format incorrect pour le nom (min 4 carac - max 15)<BR/>");
+			error = true;
+		}
+
+		if (!FieldVerifier.isValidDate(dateInput.getText())) {
+			msgErr.append("Date incorrect - rappel MM/AAAA ");
+			error = true;
+		}
+
+		if (error) {
+			errorLabel.setText(msgErr.toString());
+			return;
+		}
+
+		// Création du DTO de catégorie
+		CategorieDTO categorie = new CategorieDTO();
+		categorie.setNomCategorie(nomInput.getText());
+		String dossier = nomInput.getText().replaceAll(" ", "_") + "_"
+				+ dateInput.getText();
+		categorie.setDossier(dossier);
+		categorie.setDate(dateInput.getText());
+
+		// Appel du service RPC ajout catégorie
+		categorieService.createCategorie(categorie,
+				new WTModalAsyncCallback<String>() {
+
+					@Override
+					public void handleResult(String result) {
+						errorLabel.setText(result);
+					}
+				});
+
 	}
 
 	public static WTCreationCategorieDialogBox getInstance() {
