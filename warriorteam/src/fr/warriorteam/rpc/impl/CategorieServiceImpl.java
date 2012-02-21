@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 
 import javax.servlet.http.HttpSession;
 
@@ -46,6 +47,7 @@ public class CategorieServiceImpl extends RemoteServiceServlet implements
 		// Check si la catégorie existe déjà
 		if (checkIfExists(categorie)) {
 			resultMessage = "La categorie existe deja !";
+			return resultMessage;
 		}
 
 		// Ajout de la catégorie
@@ -67,14 +69,14 @@ public class CategorieServiceImpl extends RemoteServiceServlet implements
 
 				// Création de la requête
 				StringBuilder query = new StringBuilder();
-				query.append("INSERT INTO image (nom_categorie, dossier_fichiers, date_creation) VALUES("
+				query.append("INSERT INTO categories (nom_categorie, dossier_fichiers, date_creation) VALUES("
 						+ "'"
 						+ categorie.getNomCategorie()
 						+ "','"
 						+ categorie.getDossier()
 						+ "','"
 						+ categorie.getDate()
-						+ "')");
+						+ "-" + Calendar.DAY_OF_MONTH + "')");
 
 				// Création d'un objet Statement
 				java.sql.PreparedStatement state = connection
@@ -108,8 +110,8 @@ public class CategorieServiceImpl extends RemoteServiceServlet implements
 
 				// Création de la requête
 				StringBuilder query = new StringBuilder();
-				query.append("SELECT * FROM categories WHERE nom_categorie = "
-						+ categorie.getNomCategorie());
+				query.append("SELECT * FROM categories WHERE nom_categorie = '"
+						+ categorie.getNomCategorie() + "'");
 
 				// Création d'un objet Statement
 				Statement state = connection.createStatement();

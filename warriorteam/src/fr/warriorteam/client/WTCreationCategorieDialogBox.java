@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
+import fr.warriorteam.client.menu.MenuGauchePane;
 import fr.warriorteam.dto.CategorieDTO;
 import fr.warriorteam.rpc.CategorieService;
 import fr.warriorteam.rpc.CategorieServiceAsync;
@@ -43,7 +44,7 @@ public class WTCreationCategorieDialogBox {
 
 		nom = new Label("Nom Categorie : ");
 		nomInput = new TextBox();
-		date = new Label("Date (MM/AAAA): ");
+		date = new Label("Date (AAAA-MM): ");
 		dateInput = new TextBox();
 		submitBouton = new Button("Creer");
 		nomInput.setSize("50", "10");
@@ -103,7 +104,7 @@ public class WTCreationCategorieDialogBox {
 		}
 
 		if (!FieldVerifier.isValidDate(dateInput.getText())) {
-			msgErr.append("Date incorrect - rappel MM/AAAA ");
+			msgErr.append("Date incorrect - rappel AAAA-MM ");
 			error = true;
 		}
 
@@ -127,6 +128,7 @@ public class WTCreationCategorieDialogBox {
 					@Override
 					public void handleResult(String result) {
 						errorLabel.setText(result);
+						MenuGauchePane.getInstance();
 					}
 				});
 
