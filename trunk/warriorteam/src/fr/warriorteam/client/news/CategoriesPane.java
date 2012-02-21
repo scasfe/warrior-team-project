@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -15,8 +16,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fr.warriorteam.client.WTDialogBox;
 import fr.warriorteam.client.WTVerticalPane;
+import fr.warriorteam.client.menu.MenuGauchePane;
+import fr.warriorteam.client.pane.CenterPane;
 import fr.warriorteam.client.pane.FileUploaderPane;
 import fr.warriorteam.dto.CategorieDTO;
+import fr.warriorteam.rpc.CategorieService;
+import fr.warriorteam.rpc.CategorieServiceAsync;
 import fr.warriorteam.rpc.FileUploadService;
 import fr.warriorteam.rpc.FileUploadServiceAsync;
 import fr.warriorteam.rpc.WTModalAsyncCallback;
@@ -33,6 +38,9 @@ public class CategoriesPane extends WTVerticalPane {
 	private final static FileUploadServiceAsync imagesService = GWT
 			.create(FileUploadService.class);
 
+	private final static CategorieServiceAsync categorieService = GWT
+			.create(CategorieService.class);
+
 	private static CategoriesPane instance;
 	private static HashMap<String, String> commentaires;
 	private static List<String> imagesString;
@@ -40,6 +48,9 @@ public class CategoriesPane extends WTVerticalPane {
 	private static List<Label> pages;
 	private static VerticalPanel imagesPanel;
 	private static CategorieDTO categorie;
+	private static Label supprimer;
+	private static Label download;
+	private static Label errorLabel;
 
 	/**
 	 * Gestion de spages d'affichage d'images
@@ -173,6 +184,13 @@ public class CategoriesPane extends WTVerticalPane {
 		};
 
 		// Le conteneur d' images
+		// Supprimer la catégorie
+		supprimer = new Label("Supprimer la categorie");
+		ajouterSupprimerHandler();
+
+		// Download des images
+		download = new Label("Telecharger les images");
+		ajouterDownloadHandler();
 
 		// images.setBorderWidth(1);
 		instance.getElement().setId("corps");
@@ -180,6 +198,52 @@ public class CategoriesPane extends WTVerticalPane {
 		instance.setSpacing(10);
 		// instance.add(upload);
 		instance.add(imagesPanel);
+
+	}
+
+	private static void ajouterDownloadHandler() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private static void ajouterSupprimerHandler() {
+		class SupprimerCategorieHandler implements ClickHandler {
+			/**
+			 * Fired when the user clicks on the sendButton.
+			 */
+			public void onClick(ClickEvent event) {
+				if (Window.confirm("Etes-vous sur de supprimer la categorie "
+						+ categorie.getNomCategorie() + " ?")) {
+					deleteCategorie();
+				}
+			}
+
+		}
+		supprimer.addClickHandler(new SupprimerCategorieHandler());
+
+	}
+
+	public static void deleteCategorie() {
+		// Appel du service RPC ajout catégorie
+		categorieService.createCategorie(categorie,
+				new WTModalAsyncCallback<String>() {
+
+					@Override
+					public void handleResult(String result) {
+						if (!result.equals("")) {
+							errorLabel.setText(result);
+						} else {
+							// Reload du MenuGauche car la catégorie n'existe
+							// plus
+							MenuGauchePane.getInstance();
+
+							// Redirection vers l'accueil car la catégorie
+							// n'existe plus
+							CenterPane.getInstance().changeActiveCenterWidget(
+									NewsPane.getInstance());
+						}
+					}
+				});
 
 	}
 
@@ -200,9 +264,21 @@ public class CategoriesPane extends WTVerticalPane {
 		title.setStyleName("titleCategorie");
 		imagesPanel.add(title);
 
+		// HorizontalPanel pour composants de la categorie
+		HorizontalPanel options = new HorizontalPanel();
+		options.setSpacing(8);
+
 		// Mise à jour de l'upload
 		upload = new FileUploaderPane(categorie.getDossier());
-		imagesPanel.add(upload);
+		options.add(upload);
+		options.add(supprimer);
+		options.add(download);
+		
+		// Réinitialisation du errorLabel
+		errorLabel = new Label();
+		options.add(errorLabel);
+
+		imagesPanel.add(options);
 
 		int indexDebut = 0;
 		int indexFin = 0;

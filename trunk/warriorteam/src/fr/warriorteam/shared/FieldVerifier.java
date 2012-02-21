@@ -45,6 +45,6 @@ public class FieldVerifier {
 		if (dateStr == null) {
 			return false;
 		}
-		return dateStr.matches("^[0-9][0-9]/[0-9][0-9][0-9][0-9]$");
+		return dateStr.matches("^[0-9][0-9][0-9][0-9]-[0-9][0-9]$");
 	}
 }
