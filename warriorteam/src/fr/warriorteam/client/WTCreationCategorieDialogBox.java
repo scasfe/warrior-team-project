@@ -70,6 +70,7 @@ public class WTCreationCategorieDialogBox {
 		createCreationHandler(submitBouton);
 
 		errorLabel = new Label("Test");
+		errorLabel.addStyleName("serverResponseLabelError");
 		dialogBox = new WTDialogBox(nom, nomInput, date, dateInput,
 				submitBouton, errorLabel);
 		dialogBox.get().setText("Ajout d'une categorie");
