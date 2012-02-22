@@ -141,4 +141,65 @@ public class CategorieServiceImpl extends RemoteServiceServlet implements
 		return false;
 	}
 
+	@Override
+	public String deleteCategorie(CategorieDTO categorie) {
+		// TODO a enlever - pour tester le d
+
+		HttpSession session = getThreadLocalRequest().getSession();
+
+		if (!LoginServiceImpl.checkSession(session)) {
+			throw new IllegalArgumentException("Vous n'êtes pas connecté !");
+		}
+
+		String resultMessage = null;
+
+		// Check si la catégorie existe déjà
+		if (checkIfExists(categorie)) {
+			// Suppression de la catégorie
+			deleteCategorieDB(categorie);
+		}
+
+		logger.debug("Catégorie déjà supprimée dans une session concurrente "
+				+ categorie.getNomCategorie());
+		return resultMessage;
+	}
+
+	private void deleteCategorieDB(CategorieDTO categorie) {
+		Connection connection;
+
+		try {
+
+			connection = DAOFactory.getConnection();
+
+			try {
+				// TODO - Mettre la bonne date dans la requête
+
+				// Création de la requête
+				StringBuilder query = new StringBuilder();
+				query.append("DELETE FROM categories WHERE nom_categorie = '"
+						+ categorie.getNomCategorie() + "'");
+
+				// Création d'un objet Statement
+				java.sql.PreparedStatement state = connection
+						.prepareStatement(query.toString());
+				// L'objet ResultSet contient le résultat de la requête SQL
+				int result = state.executeUpdate();
+				// ResultSetMetaData resultMeta = result.getMetaData();
+
+				// result.close();
+				state.close();
+
+				logger.debug("Catégorie supprimée en base : "
+						+ categorie.getNomCategorie());
+			} finally {
+				connection.close();
+			}
+		} catch (SQLException e) {
+
+			logger.error("Erreur SQL : ", e);
+
+			throw new IllegalArgumentException("Problème interne du serveur");
+		}
+
+	}
 }

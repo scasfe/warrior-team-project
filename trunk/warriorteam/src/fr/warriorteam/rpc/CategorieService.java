@@ -1,7 +1,5 @@
 package fr.warriorteam.rpc;
 
-import java.util.HashMap;
-
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -14,5 +12,7 @@ import fr.warriorteam.dto.CategorieDTO;
 public interface CategorieService extends RemoteService {
 
 	String createCategorie(CategorieDTO categorie);
+
+	String deleteCategorie(CategorieDTO categorie);
 
 }

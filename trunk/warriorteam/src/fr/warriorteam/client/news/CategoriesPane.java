@@ -18,6 +18,7 @@ import fr.warriorteam.client.WTDialogBox;
 import fr.warriorteam.client.WTVerticalPane;
 import fr.warriorteam.client.menu.MenuGauchePane;
 import fr.warriorteam.client.pane.CenterPane;
+import fr.warriorteam.client.pane.FileDownloaderPane;
 import fr.warriorteam.client.pane.FileUploaderPane;
 import fr.warriorteam.dto.CategorieDTO;
 import fr.warriorteam.rpc.CategorieService;
@@ -201,11 +202,6 @@ public class CategoriesPane extends WTVerticalPane {
 
 	}
 
-	private static void ajouterDownloadHandler() {
-		// TODO Auto-generated method stub
-
-	}
-
 	private static void ajouterSupprimerHandler() {
 		class SupprimerCategorieHandler implements ClickHandler {
 			/**
@@ -223,14 +219,30 @@ public class CategoriesPane extends WTVerticalPane {
 
 	}
 
+	private static void ajouterDownloadHandler() {
+		class DownloadHandler implements ClickHandler {
+			/**
+			 * Fired when the user clicks on the sendButton.
+			 */
+			public void onClick(ClickEvent event) {
+
+				FileDownloaderPane.download(categorie.getDossier());
+
+			}
+
+		}
+		download.addClickHandler(new DownloadHandler());
+
+	}
+
 	public static void deleteCategorie() {
 		// Appel du service RPC ajout catégorie
-		categorieService.createCategorie(categorie,
+		categorieService.deleteCategorie(categorie,
 				new WTModalAsyncCallback<String>() {
 
 					@Override
 					public void handleResult(String result) {
-						if (!result.equals("")) {
+						if (result != null) {
 							errorLabel.setText(result);
 						} else {
 							// Reload du MenuGauche car la catégorie n'existe
@@ -273,9 +285,13 @@ public class CategoriesPane extends WTVerticalPane {
 		options.add(upload);
 		options.add(supprimer);
 		options.add(download);
-		
+		// Important d'ajouter le formulaire de download (il est invisible de
+		// toute façon)
+		options.add(FileDownloaderPane.getInstance());
+
 		// Réinitialisation du errorLabel
 		errorLabel = new Label();
+		errorLabel.addStyleName("serverResponseLabelError");
 		options.add(errorLabel);
 
 		imagesPanel.add(options);
