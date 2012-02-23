@@ -13,7 +13,7 @@ public interface FileUploadService extends RemoteService {
 	HashMap<String, String> uploadFile(String path)
 			throws IllegalArgumentException;
 
-	boolean createZip(String fileName);
+	String createZip(String fileName);
 
 	String addCommentaire(String commentaire, String imageName)
 			throws IllegalArgumentException;

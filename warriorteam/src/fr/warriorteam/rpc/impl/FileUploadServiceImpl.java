@@ -1,6 +1,7 @@
 package fr.warriorteam.rpc.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -142,28 +143,36 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		return commentaires;
 	}
 
-	public boolean createZip(String fileName) {
-		boolean success = false;
+	public String createZip(String pathName) {
+
+		String zipName = pathName + "_zip.zip";
 
 		try {
-			ZipFileWriter zip = new ZipFileWriter(fileName);
-			// On recupere la liste des fichiers
-			for (String st : uploadFile(fileName).keySet()) {
-				if (true) { // TODO tester ici si le fichier existe deja ou pas
+			ZipFileWriter zip = new ZipFileWriter(
+					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+							+ zipName);
 
+			File file = new File(
+					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+							+ pathName);
+			for (File f : file.listFiles()) {
+				if (!f.getName().endsWith("resize")) {
+					zip.addFile("../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+							+ pathName + "/" + f.getName());
 				}
 			}
 
-			zip.addFile("c://wouaf.txt");
-			zip.addFile("c://deletemail.log");
-			zip.addFile("c://fobec.gif");
 			zip.close();
-			success = true;
-		} catch (IOException ex) {
-			logger.fatal("Erreur IO lors de la creation du ZIP : " + ex);
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return success;
+		return zipName;
 
 	}
 

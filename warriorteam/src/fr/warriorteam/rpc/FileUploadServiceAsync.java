@@ -8,7 +8,7 @@ public interface FileUploadServiceAsync {
 
 	void uploadFile(String path, AsyncCallback<HashMap<String, String>> callback);
 
-	void createZip(String fileName, AsyncCallback<Boolean> callback);
+	void createZip(String fileName, AsyncCallback<String> callback);
 
 	void addCommentaire(String commentaire, String imageName,
 			AsyncCallback<String> callback);

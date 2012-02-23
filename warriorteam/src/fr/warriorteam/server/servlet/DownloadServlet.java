@@ -31,13 +31,13 @@ public class DownloadServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String categorieName = request.getParameter("path");
-		String filename = creerZip(categorieName);
+		// String filename = creerZip(categorieName);
 
-		filename = "../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-				+ filename;
+		categorieName = "../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+				+ categorieName;
 
 		try {
-			doDownload(request, response, filename, categorieName + ".zip");
+			doDownload(request, response, categorieName, categorieName + ".zip");
 
 		} catch (Exception e) {
 			logger.error("Erreur lors du download du fichier "
