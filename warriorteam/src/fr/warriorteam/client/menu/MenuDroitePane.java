@@ -63,9 +63,9 @@ public class MenuDroitePane extends VerticalPanel {
 			public void onFailure(Throwable caught) {
 				// Show the RPC error message to the user
 				final WTDialogBox dialogBox = new WTDialogBox(new HTML(
-						"Erreur : le serveur ne répond pas !"
-								+ "<br><br> Vérifiez votre connection"));
-				dialogBox.get().setText("Le serveur ne répond pas");
+						"Erreur : le serveur ne repond pas !"
+								+ "<br><br> Verifiez votre connection"));
+				dialogBox.get().setText("Le serveur ne repond pas");
 
 				// Add a handler to close the DialogBox
 				dialogBox.getCloseButton().addClickHandler(new ClickHandler() {
@@ -78,13 +78,13 @@ public class MenuDroitePane extends VerticalPanel {
 
 			public void onSuccess(Boolean sessionValide) {
 				if (sessionValide) {
-					titleCommentaires.setText("Connecté !!!");
+					titleCommentaires.setText("Bienvenue !");
 
 					creationCategorieLabel.setVisible(true);
 				} else {
 					// le titre du menu
 
-					titleCommentaires.setText("Vous n'êtes pas connecté");
+					titleCommentaires.setText("Vous n'etes pas connecte");
 					creationCategorieLabel.setVisible(false);
 				}
 			}
@@ -106,7 +106,7 @@ public class MenuDroitePane extends VerticalPanel {
 		// TODO - créer Panel commentaires
 
 		// Label création catégories
-		creationCategorieLabel = new Label("Créer catégorie");
+		creationCategorieLabel = new Label("Creer categorie");
 		creationCategorieLabel.setStyleName("element_menu");
 
 		class CreationCategorieHandler implements ClickHandler {

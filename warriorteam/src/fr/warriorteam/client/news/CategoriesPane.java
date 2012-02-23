@@ -8,12 +8,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import fr.warriorteam.client.WTAjoutCommentaireDialogBox;
 import fr.warriorteam.client.WTDialogBox;
 import fr.warriorteam.client.WTVerticalPane;
 import fr.warriorteam.client.menu.MenuGauchePane;
@@ -331,7 +333,7 @@ public class CategoriesPane extends WTVerticalPane {
 
 				int index = urlImage
 						.indexOf("images/" + categorie.getDossier());
-				String imageName = urlImage.substring(index + 8
+				final String imageName = urlImage.substring(index + 8
 						+ categorie.getDossier().length());
 
 				HTML html2 = new HTML(commentaires.get(imageName));
@@ -340,7 +342,18 @@ public class CategoriesPane extends WTVerticalPane {
 						+ MAX_WIDTH + "\" height=\"" + MAX_HEIGHT + "\" />";
 
 				HTML newHtml = new HTML(htmlImage);
-				WTDialogBox dialogBox = new WTDialogBox(newHtml, html2);
+				Button addCommButton = new Button("Ajouter commentaire");
+				addCommButton.setPixelSize(150, 30);
+				addCommButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						WTAjoutCommentaireDialogBox.getInstance().show(
+								imageName);
+
+					}
+				});
+
+				WTDialogBox dialogBox = new WTDialogBox(newHtml, html2,
+						addCommButton);
 
 				dialogBox.get().setText("Image n° XXX");
 

@@ -47,4 +47,17 @@ public class FieldVerifier {
 		}
 		return dateStr.matches("^[0-9][0-9][0-9][0-9]-[0-9][0-9]$");
 	}
+
+	/**
+	 * Détermine si un commentaire respecte la forme voulue
+	 * 
+	 * @param text
+	 * @return boolean
+	 */
+	public static boolean isValidComm(String text) {
+		if (text == null) {
+			return false;
+		}
+		return text.length() <= 250 && text.length() >= 2;
+	}
 }
