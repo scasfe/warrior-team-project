@@ -82,7 +82,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		HttpSession session = getThreadLocalRequest().getSession();
 		// TODO - Récupérer la bonne session à partir de la requête
 		session.setAttribute("user_id", "1");
-		session.setAttribute("pseudo", "Vero_bouly");
+		session.setAttribute("pseudo", input.getLogin());
 		sessionActiveList.add(session);
 
 		return "Hello, " + input.getLogin() + "!<br><br>" + "I am running "

@@ -2,6 +2,12 @@ package fr.warriorteam.rpc.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
@@ -11,6 +17,7 @@ import org.apache.log4j.Logger;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import fr.warriorteam.rpc.FileUploadService;
+import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.ZipFileWriter;
 
 /**
@@ -67,10 +74,9 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 				// String commentaire =
 				// imageService.searchCommentaires(image.getName());
 
+				String commentaires = searchCommentairesFromDB(image.getName());
 				// TODO à virer pour tester return commentaire unique
-				imagesList
-						.put(image.getName(),
-								"Ceci est un commentaire de test pour notre application");
+				imagesList.put(image.getName(), commentaires);
 
 			}
 
@@ -79,6 +85,61 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		// }
 
 		return imagesList;
+	}
+
+	private String searchCommentairesFromDB(String name) {
+
+		HttpSession session = getThreadLocalRequest().getSession();
+
+		// Si l'utilisaéteur est connecté, il peut voir les news réservées aux
+		// connectés
+		boolean sessionValide = LoginServiceImpl.checkSession(session);
+
+		if (!sessionValide) {
+			return "Vous devez être connecté pour voir les commentaires !";
+		}
+
+		String commentaires = null;
+
+		Connection connection;
+
+		try {
+
+			connection = DAOFactory.getConnection();
+
+			// Création de la requête
+			StringBuilder query = new StringBuilder();
+			query.append("SELECT commentaires FROM image WHERE nom_image = '"
+					+ name + "'");
+
+			// Création d'un objet Statement
+			Statement state = connection.createStatement();
+			// L'objet ResultSet contient le résultat de la requête SQL
+			ResultSet result = state.executeQuery(query.toString());
+			ResultSetMetaData resultMeta = result.getMetaData();
+
+			Integer nbNews = 0;
+			while (result.next()) {
+
+				for (int i = 1; i <= resultMeta.getColumnCount(); i++) {
+					commentaires = result.getObject(i).toString();
+				}
+			}
+
+			result.close();
+			state.close();
+
+			logger.debug(name + " : commentaires trouvés");
+
+		} catch (SQLException e) {
+
+			// TODO logger erreur
+			logger.error("Erreur SQL : ", e);
+
+			throw new IllegalArgumentException("Problème interne du serveur");
+		}
+
+		return commentaires;
 	}
 
 	public boolean createZip(String fileName) {
@@ -104,6 +165,59 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 		return success;
 
+	}
+
+	@Override
+	public String addCommentaire(String commentaire, String imageName)
+			throws IllegalArgumentException {
+
+		HttpSession session = getThreadLocalRequest().getSession();
+		String pseudo = (String) session.getAttribute("pseudo");
+
+		StringBuilder commentaireToAdd = new StringBuilder();
+		commentaireToAdd.append(searchCommentairesFromDB(imageName));
+		commentaireToAdd.append("<b>" + pseudo + " le " + new Date() + ": </b>"
+				+ commentaire + "<br/>");
+
+		String msg = "";
+
+		Connection connection;
+
+		try {
+
+			connection = DAOFactory.getConnection();
+
+			// TODO - Mettre la bonne date dans la requête
+
+			// Création de la requête
+			StringBuilder query = new StringBuilder();
+			query.append("UPDATE image set commentaires = ' "
+					+ commentaireToAdd.toString() + "' WHERE nom_image = '"
+					+ imageName + "'");
+
+			// Création d'un objet Statement
+			java.sql.PreparedStatement state = connection
+					.prepareStatement(query.toString());
+			// L'objet ResultSet contient le résultat de la requête SQL
+			int result = state.executeUpdate();
+			// ResultSetMetaData resultMeta = result.getMetaData();
+
+			// result.close();
+			state.close();
+
+			msg = "commentaire ajouté !";
+			logger.debug("Commentaire ajoutée en base : " + imageName + " par "
+					+ pseudo);
+
+		} catch (SQLException e) {
+
+			// TODO logger erreur
+			logger.error("Erreur SQL : ", e);
+
+			throw new IllegalArgumentException("Problème interne du serveur");
+		}
+
+		return msg;
 	}
 
 }
