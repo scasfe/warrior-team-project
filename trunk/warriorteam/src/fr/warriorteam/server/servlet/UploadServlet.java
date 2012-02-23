@@ -63,11 +63,14 @@ public class UploadServlet extends HttpServlet {
 
 					logger.info("Ajout du fichier : " + item.getName());
 
+					// Remplacement des espaces par des _
+					String nameRefact = item.getName().replaceAll(" ", "_");
+
 					// TODO - Couper la taille du nom à 30 caractères
 
 					File file = new File(
 							"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-									+ path + "/" + item.getName());
+									+ path + "/" + nameRefact);
 					if (file.getName().matches(
 							"^.*\\.(JPG|jpg|JPEG|BMP|bmp|png|PNG|GIF|gif)$")) {
 
@@ -86,7 +89,7 @@ public class UploadServlet extends HttpServlet {
 							fos.close();
 						}
 
-						addAuthorAndDateOnDB(file.getName(), path, user_id);
+						addAuthorAndDateOnDB(nameRefact, path, user_id);
 
 					}
 
@@ -101,9 +104,13 @@ public class UploadServlet extends HttpServlet {
 						logger.info("Ajout du fichier contenu dans le ZIP : "
 								+ entree.toString());
 
+						// Remplacement des espaces par des _
+						String nameRefact = entree.toString().replaceAll(" ",
+								"_");
+
 						File file = new File(
 								"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-										+ path + "/" + entree.toString());
+										+ path + "/" + nameRefact);
 						if (file.getName()
 								.matches(
 										"^.*\\.(JPG|jpg|JPEG|BMP|bmp|png|PNG|GIF|gif)$")) {
@@ -160,14 +167,14 @@ public class UploadServlet extends HttpServlet {
 
 			// Création de la requête
 			StringBuilder query = new StringBuilder();
-			query.append("INSERT INTO image (categorie_fk, nom_image, posteur, date) VALUES("
+			query.append("INSERT INTO image (categorie_fk, nom_image, posteur, date, commentaires) VALUES("
 					+ "'"
 					+ categorie
 					+ "','"
 					+ imageName
 					+ "','"
 					+ userId
-					+ "','" + "2012-02-25" + "')");
+					+ "','" + "2012-02-25" + "', '')");
 
 			// Création d'un objet Statement
 			java.sql.PreparedStatement state = connection
