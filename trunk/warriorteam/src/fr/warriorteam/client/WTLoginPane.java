@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fr.warriorteam.client.menu.MenuDroitePane;
 import fr.warriorteam.client.menu.MenuGauchePane;
+import fr.warriorteam.client.news.NewsPane;
 import fr.warriorteam.client.pane.CenterPane;
 import fr.warriorteam.rpc.LoginService;
 import fr.warriorteam.rpc.LoginServiceAsync;
@@ -288,7 +289,8 @@ public class WTLoginPane extends VerticalPanel {
 						// cela pour les menus et le widget central actif
 						MenuGauchePane.getInstance();
 						MenuDroitePane.getInstance();
-						CenterPane.getInstance();
+						CenterPane.getInstance().changeActiveCenterWidget(
+								NewsPane.getInstance());
 
 					}
 				});
