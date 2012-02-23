@@ -36,6 +36,16 @@
     <url-pattern>/warriorteam/upload</url-pattern>
   </servlet-mapping>
   
+        <servlet>
+    <servlet-name>categorieServlet</servlet-name>
+    <servlet-class>fr.warriorteam.rpc.impl.CategorieServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>categorieServlet</servlet-name>
+    <url-pattern>/warriorteam/categorie</url-pattern>
+  </servlet-mapping>
+  
   <servlet> 
     <servlet-name>fileUploader</servlet-name> 
     <servlet-class>fr.warriorteam.server.servlet.UploadServlet</servlet-class> 
@@ -43,6 +53,15 @@
 <servlet-mapping> 
   <servlet-name>fileUploader</servlet-name> 
   <url-pattern>/fileupload.do</url-pattern> 
+</servlet-mapping> 
+
+  <servlet> 
+    <servlet-name>fileDownloader</servlet-name> 
+    <servlet-class>fr.warriorteam.server.servlet.DownloadServlet</servlet-class> 
+</servlet> 
+<servlet-mapping> 
+  <servlet-name>fileDownloader</servlet-name> 
+  <url-pattern>/filedownload.do</url-pattern> 
 </servlet-mapping> 
   
   
