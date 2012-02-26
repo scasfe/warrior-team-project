@@ -177,18 +177,24 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public String addCommentaire(String commentaire, String imageName)
+	public String[] addCommentaire(String commentaire, String imageName)
 			throws IllegalArgumentException {
 
 		HttpSession session = getThreadLocalRequest().getSession();
 		String pseudo = (String) session.getAttribute("pseudo");
 
+		String commHTML = commentaire.replaceAll("'", "&rsquo;");
+		commHTML = commHTML.replaceAll("\"", "&rdquo;");
+		commHTML = "<b>" + pseudo + " le " + new Date() + ": </b>" + commHTML
+				+ "<br/>";
+
 		StringBuilder commentaireToAdd = new StringBuilder();
 		commentaireToAdd.append(searchCommentairesFromDB(imageName));
-		commentaireToAdd.append("<b>" + pseudo + " le " + new Date() + ": </b>"
-				+ commentaire + "<br/>");
+		commentaireToAdd.append(commHTML);
 
-		String msg = "";
+		// Préparation du résultat
+		String commAjoute = "";
+		String message = "";
 
 		Connection connection;
 
@@ -214,9 +220,10 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 			// result.close();
 			state.close();
 
-			msg = "commentaire ajouté !";
+			message = "commentaire ajouté !";
 			logger.debug("Commentaire ajoutée en base : " + imageName + " par "
 					+ pseudo);
+			commAjoute = commHTML;
 
 		} catch (SQLException e) {
 
@@ -226,7 +233,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 			throw new IllegalArgumentException("Problème interne du serveur");
 		}
 
-		return msg;
+		String[] result = { message, commAjoute };
+		return result;
 	}
-
 }

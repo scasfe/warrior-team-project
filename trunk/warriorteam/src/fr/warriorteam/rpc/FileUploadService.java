@@ -15,7 +15,7 @@ public interface FileUploadService extends RemoteService {
 
 	String createZip(String fileName);
 
-	String addCommentaire(String commentaire, String imageName)
+	String[] addCommentaire(String commentaire, String imageName)
 			throws IllegalArgumentException;
 
 }

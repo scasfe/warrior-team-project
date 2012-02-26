@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
+import fr.warriorteam.client.news.CategoriesPane;
 import fr.warriorteam.rpc.FileUploadService;
 import fr.warriorteam.rpc.FileUploadServiceAsync;
 import fr.warriorteam.rpc.WTModalAsyncCallback;
@@ -89,11 +90,23 @@ public class WTAjoutCommentaireDialogBox {
 
 		// Appel du service RPC ajout catégorie
 		fileUploadServiceImpl.addCommentaire(commentaireInput.getText(),
-				imageName, new WTModalAsyncCallback<String>() {
+				imageName, new WTModalAsyncCallback<String[]>() {
 
 					@Override
-					public void handleResult(String result) {
-						errorLabel.setText(result);
+					public void handleResult(String[] result) {
+						errorLabel.setText(result[0]);
+
+						// S'il y a eu un commentaire d'ajouté
+						if (result.length > 1) {
+							// Mise à jour dynamique du commentaire
+
+							String html = CategoriesPane.getCommentaires()
+									.get(imageName).getHTML();
+							html += result[1];
+							CategoriesPane.getCommentaires().get(imageName)
+									.setHTML(html);
+						}
+
 					}
 				});
 

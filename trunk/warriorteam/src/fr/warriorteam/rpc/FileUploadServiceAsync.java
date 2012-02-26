@@ -11,6 +11,6 @@ public interface FileUploadServiceAsync {
 	void createZip(String fileName, AsyncCallback<String> callback);
 
 	void addCommentaire(String commentaire, String imageName,
-			AsyncCallback<String> callback);
+			AsyncCallback<String[]> callback);
 
 }
