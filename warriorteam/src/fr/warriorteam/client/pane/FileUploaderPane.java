@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import fr.warriorteam.client.news.CategoriesPane;
+
 public class FileUploaderPane extends FormPanel {
 
 	// FormPanel form = new FormPanel();
@@ -50,10 +52,12 @@ public class FileUploaderPane extends FormPanel {
 			public void onSubmitComplete(SubmitCompleteEvent event) {
 
 				WTModalWaitPane.getInstance().hide();
+				CategoriesPane.getInstance().reloadData();
 				if (!event.getResults().equals("")) {
 					Window.alert(event.getResults());
 				} else {
-					Window.alert("Fichier " + fu.getFilename() + " uploadé !");
+					Window.alert("Image " + fu.getFilename()
+							+ " ajoutee avec SUCCES !");
 				}
 			}
 		});

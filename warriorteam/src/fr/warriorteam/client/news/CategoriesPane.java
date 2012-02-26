@@ -45,7 +45,7 @@ public class CategoriesPane extends WTVerticalPane {
 			.create(CategorieService.class);
 
 	private static CategoriesPane instance;
-	private static HashMap<String, String> commentaires;
+	private static HashMap<String, HTML> commentaires;
 	private static List<String> imagesString;
 	private static List<Image> images;
 	private static List<Label> pages;
@@ -132,7 +132,12 @@ public class CategoriesPane extends WTVerticalPane {
 						// Récupération des commentaires
 						commentaires.clear();
 						imagesString = new ArrayList<String>(result.keySet());
-						commentaires = result;
+
+						// Conversion en HTML
+						commentaires = new HashMap<String, HTML>();
+						for (String image : imagesString) {
+							commentaires.put(image, new HTML(result.get(image)));
+						}
 
 						// Affichage de la page courante
 						afficherPageCourante();
@@ -160,7 +165,7 @@ public class CategoriesPane extends WTVerticalPane {
 		// on vire l'ancien contenu
 		if (commentaires == null) {
 			// instance.remove(htmls);
-			commentaires = new HashMap<String, String>();
+			commentaires = new HashMap<String, HTML>();
 		}
 
 		// on vire l'ancien contenu
@@ -336,7 +341,7 @@ public class CategoriesPane extends WTVerticalPane {
 				final String imageName = urlImage.substring(index + 8
 						+ categorie.getDossier().length());
 
-				HTML html2 = new HTML(commentaires.get(imageName));
+				HTML html2 = commentaires.get(imageName);
 
 				String htmlImage = "<img src=\" " + urlImage + "\" width=\""
 						+ MAX_WIDTH + "\" height=\"" + MAX_HEIGHT + "\" />";
@@ -355,7 +360,7 @@ public class CategoriesPane extends WTVerticalPane {
 				WTDialogBox dialogBox = new WTDialogBox(newHtml, html2,
 						addCommButton);
 
-				dialogBox.get().setText("Image n° XXX");
+				dialogBox.get().setText("Image XXX");
 
 				dialogBox.get().setAnimationEnabled(false);
 				dialogBox.get().center();
@@ -435,6 +440,10 @@ public class CategoriesPane extends WTVerticalPane {
 
 	public static void setCategorie(CategorieDTO categorie) {
 		CategoriesPane.categorie = categorie;
+	}
+
+	public static HashMap<String, HTML> getCommentaires() {
+		return commentaires;
 	}
 
 }

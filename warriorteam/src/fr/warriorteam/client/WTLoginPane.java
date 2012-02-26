@@ -87,7 +87,11 @@ public class WTLoginPane extends VerticalPanel {
 					// Sinon on affiche l'écran de login
 					panel1.setVisible(true);
 					connectButton.setVisible(true);
-					createButton.setVisible(true);
+
+					// Actuellement d"ésactivé creer compte
+					createButton.setVisible(false);
+					createButton.setEnabled(false);
+
 					deconnectionButton.setVisible(false);
 				}
 			}
