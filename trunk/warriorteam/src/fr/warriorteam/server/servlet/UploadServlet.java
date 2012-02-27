@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.ImagesUtils;
+import fr.warriorteam.server.utils.PropertiesUtils;
 
 public class UploadServlet extends HttpServlet {
 
@@ -54,7 +55,7 @@ public class UploadServlet extends HttpServlet {
 
 				// Path de images création du dossier si non existant
 				File directory = new File(
-						"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+						PropertiesUtils.getProperties("path_file_images")
 								+ path);
 				directory.mkdir();
 
@@ -69,7 +70,7 @@ public class UploadServlet extends HttpServlet {
 					// TODO - Couper la taille du nom à 30 caractères
 
 					File file = new File(
-							"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+							PropertiesUtils.getProperties("path_file_images")
 									+ path + "/" + nameRefact);
 					if (file.getName().matches(
 							"^.*\\.(JPG|jpg|JPEG|BMP|bmp|png|PNG|GIF|gif)$")) {
@@ -109,7 +110,8 @@ public class UploadServlet extends HttpServlet {
 								"_");
 
 						File file = new File(
-								"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+								PropertiesUtils
+										.getProperties("path_file_images")
 										+ path + "/" + nameRefact);
 						if (file.getName()
 								.matches(

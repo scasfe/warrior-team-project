@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import fr.warriorteam.server.utils.PropertiesUtils;
 import fr.warriorteam.server.utils.ZipFileWriter;
 
 public class DownloadServlet extends HttpServlet {
@@ -33,7 +34,7 @@ public class DownloadServlet extends HttpServlet {
 		String categorieName = request.getParameter("path");
 		// String filename = creerZip(categorieName);
 
-		categorieName = "../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+		categorieName = PropertiesUtils.getProperties("path_file_images")
 				+ categorieName;
 
 		try {
@@ -53,16 +54,18 @@ public class DownloadServlet extends HttpServlet {
 
 		try {
 			ZipFileWriter zip = new ZipFileWriter(
-					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-							+ zipName);
+					PropertiesUtils.getProperties("path_file_images") + zipName);
 
 			File file = new File(
-					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+					PropertiesUtils.getProperties("path_file_images")
 							+ pathName);
 			for (File f : file.listFiles()) {
 				if (!f.getName().endsWith("resize")) {
-					zip.addFile("../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-							+ pathName + "/" + f.getName());
+					zip.addFile(PropertiesUtils
+							.getProperties("path_file_images")
+							+ pathName
+							+ "/"
+							+ f.getName());
 				}
 			}
 

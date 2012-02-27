@@ -28,7 +28,7 @@ public class ImagesUtils {
 
 			// Création du dossier resize s'il n'existe pas
 			File directory = new File(
-					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+					PropertiesUtils.getProperties("path_file_images")
 							+ path + "/resize");
 			directory.mkdir();
 
@@ -48,7 +48,7 @@ public class ImagesUtils {
 					imagnew,
 					"png",
 					new File(
-							"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+							PropertiesUtils.getProperties("path_file_images")
 									+ path + "/resize/" + file.getName()));
 		} catch (IOException ex) {
 			// Logger.getLogger(ImageRedim.class.getName()).log(Level.SEVERE,
