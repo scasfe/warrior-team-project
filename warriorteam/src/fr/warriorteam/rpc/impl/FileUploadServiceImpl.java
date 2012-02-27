@@ -19,6 +19,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import fr.warriorteam.rpc.FileUploadService;
 import fr.warriorteam.server.utils.DAOFactory;
+import fr.warriorteam.server.utils.PropertiesUtils;
 import fr.warriorteam.server.utils.ZipFileWriter;
 
 /**
@@ -54,9 +55,8 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 		// Dossier image
 		File[] images = null;
-		File file = new File(
-				"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-						+ path + "/resize");
+		File file = new File(PropertiesUtils.getProperties("path_file_images")
+				+ path + "/resize");
 		// if(file.isDirectory()){
 		images = file.listFiles();
 		// }
@@ -149,16 +149,18 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 		try {
 			ZipFileWriter zip = new ZipFileWriter(
-					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-							+ zipName);
+					PropertiesUtils.getProperties("path_file_images") + zipName);
 
 			File file = new File(
-					"../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
+					PropertiesUtils.getProperties("path_file_images")
 							+ pathName);
 			for (File f : file.listFiles()) {
 				if (!f.getName().endsWith("resize")) {
-					zip.addFile("../apache-tomcat-6.0.33-windows-x64/apache-tomcat-6.0.33/webapps/warriorteam/war/images/"
-							+ pathName + "/" + f.getName());
+					zip.addFile(PropertiesUtils
+							.getProperties("path_file_images")
+							+ pathName
+							+ "/"
+							+ f.getName());
 				}
 			}
 

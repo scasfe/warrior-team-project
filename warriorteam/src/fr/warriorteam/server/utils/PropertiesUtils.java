@@ -5,18 +5,24 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.Properties;
+
+import org.apache.log4j.Logger;
 
 /*
  * Created on Jan 24, 2007
  *
  */
 
-public class PropertiesDemo {
+public class PropertiesUtils {
 
-	public PropertiesDemo() {
-		super();
+	private static final Logger logger = Logger
+			.getLogger(PropertiesUtils.class);
+
+	private static final Properties properties = new Properties();
+
+	private PropertiesUtils() {
+
 	}
 
 	/**
@@ -32,12 +38,15 @@ public class PropertiesDemo {
 	 * @throws IOException
 	 *             si une erreur est survenue lors de l'écriture du fichier
 	 */
-	public void saveProperties(Properties props, String fileLocation,
-			String comments) throws FileNotFoundException, IOException {
+	public void saveProperties(String fileLocation, String comments)
+			throws FileNotFoundException, IOException {
 		OutputStream out = new FileOutputStream(fileLocation);
-		props.store(out, comments);
+		properties.store(out, comments);
 		out.flush();
 		out.close();
+
+		logger.debug("Ajout des properties dans le fichier" + fileLocation
+				+ "commentaire : " + comments);
 	}
 
 	/**
@@ -51,11 +60,11 @@ public class PropertiesDemo {
 	 * @throws IOException
 	 *             si une erreur est survenue durant la lecture
 	 */
-	public Properties loadProperties(String propertiesFileLocation)
+	public static void loadProperties(String propertiesFileLocation)
 			throws FileNotFoundException, IOException {
-		Properties props = new Properties();
-		props.load(new FileInputStream(propertiesFileLocation));
-		return props;
+		properties.load(new FileInputStream(propertiesFileLocation));
+		logger.debug("Properties chargées");
+
 	}
 
 	/**
@@ -65,13 +74,16 @@ public class PropertiesDemo {
 	 * @param props
 	 *            Le fichier à afficher
 	 */
-	public void displayProperties(Properties props) {
-		Iterator it = props.keySet().iterator();
-		while (it.hasNext()) {
-			String propertyName = (String) it.next();
-			String propertyValue = props.getProperty(propertyName);
-			System.out.println(propertyName + "=" + propertyValue);
+	public static String getProperties(String key) {
+		String propertyValue = properties.getProperty(key);
+
+		if (propertyValue != null) {
+			logger.debug("Property trouvée : " + key + "=" + propertyValue);
+		} else {
+			logger.debug("Property non trouvée : " + key);
 		}
+
+		return propertyValue;
 	}
 
 	/**
@@ -84,37 +96,37 @@ public class PropertiesDemo {
 	 * @param args
 	 *            non utilsé
 	 */
-	public static void main(String[] args) {
-		PropertiesDemo demo = new PropertiesDemo();
-
-		// Emplacement où sera stocké le fichier
-		String propertiesFileLocation = "d:/myProperties.properties";
-
-		// On instancie un nouvel objet Properties
-		Properties myProps = new Properties();
-		// On y insère des paires [clé,valeur]
-		myProps.setProperty("user.name", "HackTrack");
-		myProps.setProperty("os.name", "Linux");
-		myProps.setProperty("java.ide", "Eclipse3.2");
-		myProps.setProperty("java.applicationserver.name", "JBoss AS");
-		myProps.setProperty("java.applicationserver.version", "4.0.5");
-		myProps.setProperty("user.function", "Developer");
-		myProps.setProperty("user.age", "You are too curious!");
-
-		try {
-			// On stocke le fichier sur le disque
-			demo.saveProperties(myProps, propertiesFileLocation,
-					"This is a demo on Properties by HackTrack");
-			// On crée un nouvel objet Properties en lisant le fichier sur le
-			// disque
-			Properties loadedProps = demo
-					.loadProperties(propertiesFileLocation);
-			// On affiche le contenu du fichier
-			demo.displayProperties(loadedProps);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	// public static void main(String[] args) {
+	// PropertiesUtils demo = new PropertiesUtils();
+	//
+	// // Emplacement où sera stocké le fichier
+	// String propertiesFileLocation = "d:/myProperties.properties";
+	//
+	// // On instancie un nouvel objet Properties
+	// Properties myProps = new Properties();
+	// // On y insère des paires [clé,valeur]
+	// myProps.setProperty("user.name", "HackTrack");
+	// myProps.setProperty("os.name", "Linux");
+	// myProps.setProperty("java.ide", "Eclipse3.2");
+	// myProps.setProperty("java.applicationserver.name", "JBoss AS");
+	// myProps.setProperty("java.applicationserver.version", "4.0.5");
+	// myProps.setProperty("user.function", "Developer");
+	// myProps.setProperty("user.age", "You are too curious!");
+	//
+	// try {
+	// // On stocke le fichier sur le disque
+	// demo.saveProperties(myProps, propertiesFileLocation,
+	// "This is a demo on Properties by HackTrack");
+	// // On crée un nouvel objet Properties en lisant le fichier sur le
+	// // disque
+	// Properties loadedProps = demo
+	// .loadProperties(propertiesFileLocation);
+	// // On affiche le contenu du fichier
+	// demo.displayProperties(loadedProps);
+	// } catch (FileNotFoundException e) {
+	// e.printStackTrace();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
 }
