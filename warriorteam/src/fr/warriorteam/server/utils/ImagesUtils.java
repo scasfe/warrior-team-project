@@ -1,8 +1,6 @@
 package fr.warriorteam.server.utils;
 
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -28,8 +26,8 @@ public class ImagesUtils {
 
 			// Création du dossier resize s'il n'existe pas
 			File directory = new File(
-					PropertiesUtils.getProperties("path_file_images")
-							+ path + "/resize");
+					PropertiesUtils.getProperties("path_file_images") + path
+							+ "/resize");
 			directory.mkdir();
 
 			// Exemple pour agrandir
@@ -44,12 +42,9 @@ public class ImagesUtils {
 			double factor = calculerCoeffRedimImage(widht, height);
 
 			BufferedImage imagnew = scale(imag, factor);
-			ImageIO.write(
-					imagnew,
-					"png",
-					new File(
-							PropertiesUtils.getProperties("path_file_images")
-									+ path + "/resize/" + file.getName()));
+			ImageIO.write(imagnew, "png",
+					new File(PropertiesUtils.getProperties("path_file_images")
+							+ path + "/resize/" + file.getName()));
 		} catch (IOException ex) {
 			// Logger.getLogger(ImageRedim.class.getName()).log(Level.SEVERE,
 			// null, ex);
@@ -61,22 +56,25 @@ public class ImagesUtils {
 		int destWidth = (int) (bImage.getWidth() * factor);
 		int destHeight = (int) (bImage.getHeight() * factor);
 		// créer l'image de destination
-		GraphicsConfiguration configuration = GraphicsEnvironment
-				.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-				.getDefaultConfiguration();
-		BufferedImage bImageNew = configuration.createCompatibleImage(
-				destWidth, destHeight);
-		Graphics2D graphics = bImageNew.createGraphics();
+		// GraphicsConfiguration configuration = GraphicsEnvironment
+		// .getLocalGraphicsEnvironment().getDefaultScreenDevice()
+		// .getDefaultConfiguration();
+		// BufferedImage bImageNew = configuration.createCompatibleImage(
+		// destWidth, destHeight);
+
+		BufferedImage newImage = new BufferedImage(destWidth, destHeight, 1);
+		Graphics2D graphics = newImage.createGraphics();
 		graphics.setRenderingHint(RenderingHints.KEY_RENDERING,
 				RenderingHints.VALUE_RENDER_QUALITY);
 		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 		// dessiner l'image de destination
+
 		graphics.drawImage(bImage, 0, 0, destWidth, destHeight, 0, 0,
 				bImage.getWidth(), bImage.getHeight(), null);
 		graphics.dispose();
 
-		return bImageNew;
+		return newImage;
 	}
 
 	public static double calculerCoeffRedimImage(int width, int height) {
