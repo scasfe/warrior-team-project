@@ -55,8 +55,8 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 		// Dossier image
 		File[] images = null;
-		File file = new File(PropertiesUtils.getProperties("path_file_images")
-				+ path + "/resize");
+		File file = new File(
+				PropertiesUtils.getProperties("path_file_images_resize") + path);
 		// if(file.isDirectory()){
 		images = file.listFiles();
 		// }
@@ -67,7 +67,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		// s'il y a des images dansR le dossier
 		if (images != null) {
 			String path_images = PropertiesUtils
-					.getProperties("path_file_images");
+					.getProperties("path_file_images_resize");
 			for (File image : images) {
 
 				// allez voir en base le commentaire
@@ -78,8 +78,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 				String commentaires = searchCommentairesFromDB(image.getName());
 				// TODO à virer pour tester return commentaire unique
-				imagesList.put(
-						path_images + path + "/resize/" + image.getName(),
+				imagesList.put("images/resize/" + path + "/" + image.getName(),
 						commentaires);
 
 			}

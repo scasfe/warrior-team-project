@@ -24,10 +24,13 @@ public class ImagesUtils {
 	public static void copyWithRedimImage(File file, String path) {
 		try {
 
+			String path_image = PropertiesUtils
+					.getProperties("path_file_images_resize");
+
 			// Création du dossier resize s'il n'existe pas
-			File directory = new File(
-					PropertiesUtils.getProperties("path_file_images") + path
-							+ "/resize");
+			File directory = new File(path_image
+
+			+ path);
 			directory.mkdir();
 
 			// Exemple pour agrandir
@@ -42,9 +45,8 @@ public class ImagesUtils {
 			double factor = calculerCoeffRedimImage(widht, height);
 
 			BufferedImage imagnew = scale(imag, factor);
-			ImageIO.write(imagnew, "png",
-					new File(PropertiesUtils.getProperties("path_file_images")
-							+ path + "/resize/" + file.getName()));
+			ImageIO.write(imagnew, "png", new File(path_image + path + "/"
+					+ file.getName()));
 		} catch (IOException ex) {
 			// Logger.getLogger(ImageRedim.class.getName()).log(Level.SEVERE,
 			// null, ex);

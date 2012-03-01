@@ -136,7 +136,11 @@ public class CategoriesPane extends WTVerticalPane {
 						// Conversion en HTML
 						commentaires = new HashMap<String, HTML>();
 						for (String image : imagesString) {
-							commentaires.put(image, new HTML(result.get(image)));
+							int index = image.indexOf(categorie.getDossier());
+							final String imageName = image.substring(index + 1
+									+ categorie.getDossier().length());
+							commentaires.put(imageName,
+									new HTML(result.get(image)));
 						}
 
 						// Affichage de la page courante
@@ -336,11 +340,11 @@ public class CategoriesPane extends WTVerticalPane {
 				String urlImage = image.getUrl();
 				urlImage = urlImage.replaceFirst("/resize", "");
 
-				int index = urlImage.indexOf("categorie.getDossier()");
+				int index = urlImage.indexOf(categorie.getDossier());
 				final String imageName = urlImage.substring(index + 1
 						+ categorie.getDossier().length());
 
-				HTML html2 = commentaires.get(urlImage);
+				HTML html2 = commentaires.get(imageName);
 
 				String htmlImage = "<img src=\" " + urlImage + "\" width=\""
 						+ MAX_WIDTH + "\" height=\"" + MAX_HEIGHT + "\" />";
