@@ -336,12 +336,11 @@ public class CategoriesPane extends WTVerticalPane {
 				String urlImage = image.getUrl();
 				urlImage = urlImage.replaceFirst("/resize", "");
 
-				int index = urlImage
-						.indexOf("images/" + categorie.getDossier());
-				final String imageName = urlImage.substring(index + 8
+				int index = urlImage.indexOf("categorie.getDossier()");
+				final String imageName = urlImage.substring(index + 1
 						+ categorie.getDossier().length());
 
-				HTML html2 = commentaires.get(imageName);
+				HTML html2 = commentaires.get(urlImage);
 
 				String htmlImage = "<img src=\" " + urlImage + "\" width=\""
 						+ MAX_WIDTH + "\" height=\"" + MAX_HEIGHT + "\" />";
@@ -423,8 +422,7 @@ public class CategoriesPane extends WTVerticalPane {
 
 			}
 
-			Image image = new Image("images/" + categorie.getDossier()
-					+ "/resize/" + imagesString.get(i));
+			Image image = new Image(imagesString.get(i));
 			images.add(image);
 			image.addClickHandler(new ImageHandler());
 			image.setStyleName("div_image");

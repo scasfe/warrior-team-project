@@ -144,8 +144,7 @@ public class UploadServlet extends HttpServlet {
 
 			}
 		} catch (Exception e) {
-			logger.error("Erreur lors de l'upload du fichier "
-					+ e.getStackTrace());
+			logger.error("Erreur lors de l'upload du fichier ", e);
 			throw new RuntimeException(e);
 		}
 
