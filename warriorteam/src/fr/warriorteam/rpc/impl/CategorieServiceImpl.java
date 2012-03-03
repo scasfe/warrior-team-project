@@ -14,6 +14,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import fr.warriorteam.dto.CategorieDTO;
 import fr.warriorteam.rpc.CategorieService;
+import fr.warriorteam.server.exception.WebFonctionnelleException;
 import fr.warriorteam.server.utils.DAOFactory;
 
 /**
@@ -42,6 +43,9 @@ public class CategorieServiceImpl extends RemoteServiceServlet implements
 			throw new IllegalArgumentException("Vous n'êtes pas connecté !");
 		}
 
+		// Ajout du créateur
+		categorie.setCreateur((String) session.getAttribute("pseudo"));
+
 		String resultMessage = null;
 
 		// Check si la catégorie existe déjà
@@ -69,14 +73,17 @@ public class CategorieServiceImpl extends RemoteServiceServlet implements
 
 				// Création de la requête
 				StringBuilder query = new StringBuilder();
-				query.append("INSERT INTO categories (nom_categorie, dossier_fichiers, date_creation) VALUES("
+				query.append("INSERT INTO categories (nom_categorie, dossier_fichiers, date_creation, createur) VALUES("
 						+ "'"
 						+ categorie.getNomCategorie()
 						+ "','"
 						+ categorie.getDossier()
 						+ "','"
 						+ categorie.getDate()
-						+ "-" + Calendar.DAY_OF_MONTH + "')");
+						+ "-"
+						+ Calendar.DAY_OF_MONTH
+						+ "','"
+						+ categorie.getCreateur() + "')");
 
 				// Création d'un objet Statement
 				java.sql.PreparedStatement state = connection
@@ -142,13 +149,25 @@ public class CategorieServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public String deleteCategorie(CategorieDTO categorie) {
+	public String deleteCategorie(CategorieDTO categorie)
+			throws WebFonctionnelleException {
 		// TODO a enlever - pour tester le d
 
 		HttpSession session = getThreadLocalRequest().getSession();
 
 		if (!LoginServiceImpl.checkSession(session)) {
 			throw new IllegalArgumentException("Vous n'êtes pas connecté !");
+		}
+
+		// il n'y a que le créateur de la catégorie qui peut détuire une
+		// catégorie
+		String createur = (String) session.getAttribute("pseudo");
+
+		if (!createur.equals(categorie.getCreateur())) {
+			throw new WebFonctionnelleException(
+					"Vous n'etes pas le createur de la categorie. Seul "
+							+ categorie.getCreateur()
+							+ " peut supprimer cette categorie !");
 		}
 
 		String resultMessage = null;
