@@ -15,4 +15,6 @@ public interface FileUploadServiceAsync {
 	void addCommentaire(String commentaire, String imageName,
 			AsyncCallback<String[]> callback);
 
+	void deleteImage(ImageDTO imageDto, AsyncCallback<String> callback);
+
 }

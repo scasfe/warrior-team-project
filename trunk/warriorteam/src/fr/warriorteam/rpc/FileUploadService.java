@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import fr.warriorteam.dto.ImageDTO;
+import fr.warriorteam.server.exception.WebFonctionnelleException;
 
 /**
  * The client side stub for the RPC service.
@@ -18,5 +19,7 @@ public interface FileUploadService extends RemoteService {
 
 	String[] addCommentaire(String commentaire, String imageName)
 			throws IllegalArgumentException;
+
+	String deleteImage(ImageDTO imageDto) throws WebFonctionnelleException;
 
 }

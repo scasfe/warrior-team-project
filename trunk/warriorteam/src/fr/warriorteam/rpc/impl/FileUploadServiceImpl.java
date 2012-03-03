@@ -20,6 +20,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import fr.warriorteam.dto.ImageDTO;
 import fr.warriorteam.rpc.FileUploadService;
+import fr.warriorteam.server.exception.WebFonctionnelleException;
 import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.PropertiesUtils;
 import fr.warriorteam.server.utils.ZipFileWriter;
@@ -211,7 +212,12 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 				+ "<br/>";
 
 		StringBuilder commentaireToAdd = new StringBuilder();
-		commentaireToAdd.append(searchCommentairesAndPosteurFromDB(imageName));
+
+		// Récupération des commentaires en base
+		List<String> posteurComm = searchCommentairesAndPosteurFromDB(imageName);
+		if (posteurComm != null && posteurComm.size() > 1) {
+			commentaireToAdd.append(posteurComm.get(1));
+		}
 		commentaireToAdd.append(commHTML);
 
 		// Préparation du résultat
@@ -257,5 +263,113 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 		String[] result = { message, commAjoute };
 		return result;
+	}
+
+	public String deleteImage(ImageDTO imageDto)
+			throws WebFonctionnelleException {
+		// TODO a enlever - pour tester le d
+
+		HttpSession session = getThreadLocalRequest().getSession();
+
+		if (!LoginServiceImpl.checkSession(session)) {
+			throw new IllegalArgumentException("Vous n'êtes pas connecté !");
+		}
+
+		// il n'y a que le créateur de la catégorie qui peut détuire une
+		// catégorie
+		String posteur = (String) session.getAttribute("pseudo");
+
+		if (!posteur.equals(imageDto.getPosteur())) {
+			throw new WebFonctionnelleException(
+					"Vous n'etes pas le posteur de l'image. Seul "
+							+ imageDto.getPosteur()
+							+ " peut supprimer cette image !");
+		}
+
+		String resultMessage = null;
+
+		// Suppression de l'image
+		deleteImageDB(imageDto);
+		deleteImageOnSystem(imageDto);
+		//
+		// logger.debug("Catégorie déjà supprimée dans une session concurrente "
+		// + categorie.getNomCategorie());
+
+		return resultMessage;
+	}
+
+	private void deleteImageOnSystem(ImageDTO imageDto) {
+		// Récupération de la catégorie (categorie/nomImage.xxx)
+		String imageName = imageDto.getNomImage().replaceAll("images/resize/",
+				"");
+
+		// Ouverture de l'image dans /resize
+		File file = new File(
+				PropertiesUtils.getProperties("path_file_images_resize")
+						+ imageName);
+		if (file.exists()) {
+			file.delete();
+		}
+		logger.debug("Image " + imageName + "supprimée de /resize");
+
+		// Ouverture de l'image dans taille réelle
+		file = new File(PropertiesUtils.getProperties("path_file_images")
+				+ imageName);
+		if (file.exists()) {
+			file.delete();
+		}
+		logger.debug("Image " + imageName + "supprimée de taille réelle");
+
+	}
+
+	private void deleteImageDB(ImageDTO imageDto) {
+
+		Connection connection;
+
+		try {
+
+			connection = DAOFactory.getConnection();
+
+			try {
+				// Formatage du dto pour récupérer catégorie et image name
+				// Récupération de la catégorie (categorie/nomImage.xxx)
+				String categorieAndName = imageDto.getNomImage().replaceAll(
+						"images/resize/", "");
+				int indexFinCategorie = categorieAndName.indexOf("/");
+				String categorieName = categorieAndName.substring(0,
+						indexFinCategorie);
+				String imageName = categorieAndName.substring(
+						indexFinCategorie + 1, categorieAndName.length());
+
+				// Création de la requête
+				StringBuilder query = new StringBuilder();
+				query.append("DELETE FROM image WHERE categorie_fk = '"
+						+ categorieName + "' AND nom_image = '" + imageName
+						+ "' AND posteur = '" + imageDto.getPosteur() + "'");
+
+				// Création d'un objet Statement
+				java.sql.PreparedStatement state = connection
+						.prepareStatement(query.toString());
+				// L'objet ResultSet contient le résultat de la requête SQL
+				int result = state.executeUpdate();
+				// ResultSetMetaData resultMeta = result.getMetaData();
+
+				// result.close();
+				state.close();
+
+				logger.debug("Image supprimée en base : " + categorieName
+						+ imageName);
+			} finally {
+				connection.close();
+			}
+		} catch (SQLException e) {
+
+			logger.error("Erreur SQL : ", e);
+
+			throw new IllegalArgumentException(
+					"Problème interne du serveur lors de la suppression en base de l'image "
+							+ imageDto);
+		}
+
 	}
 }
