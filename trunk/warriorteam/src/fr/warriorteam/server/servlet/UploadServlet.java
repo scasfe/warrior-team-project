@@ -39,7 +39,7 @@ public class UploadServlet extends HttpServlet {
 
 		// Infos de session
 		HttpSession session = request.getSession();
-		String user_id = (String) session.getAttribute("user_id");
+		String user_id = (String) session.getAttribute("pseudo");
 
 		ServletFileUpload upload = new ServletFileUpload();
 

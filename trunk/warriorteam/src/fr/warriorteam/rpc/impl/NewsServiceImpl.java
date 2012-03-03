@@ -145,6 +145,8 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 					categorie.setId(new Long((Integer) result.getObject(1)));
 					categorie.setNomCategorie(result.getObject(2).toString());
 					categorie.setDossier(result.getObject(3).toString());
+					categorie.setDate(result.getObject(4).toString());
+					categorie.setCreateur(result.getObject(5).toString());
 
 					results.getCategories().add(categorie);
 

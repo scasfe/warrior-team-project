@@ -23,6 +23,7 @@ import fr.warriorteam.client.pane.CenterPane;
 import fr.warriorteam.client.pane.FileDownloaderPane;
 import fr.warriorteam.client.pane.FileUploaderPane;
 import fr.warriorteam.dto.CategorieDTO;
+import fr.warriorteam.dto.ImageDTO;
 import fr.warriorteam.rpc.CategorieService;
 import fr.warriorteam.rpc.CategorieServiceAsync;
 import fr.warriorteam.rpc.FileUploadService;
@@ -46,7 +47,7 @@ public class CategoriesPane extends WTVerticalPane {
 
 	private static CategoriesPane instance;
 	private static HashMap<String, HTML> commentaires;
-	private static List<String> imagesString;
+	private static HashMap<String, ImageDTO> imagesList;
 	private static List<Image> images;
 	private static List<Label> pages;
 	private static VerticalPanel imagesPanel;
@@ -98,7 +99,7 @@ public class CategoriesPane extends WTVerticalPane {
 		// WTModalWaitPane.getInstance().center();
 
 		imagesService.uploadFile(categorie.getDossier(),
-				new WTModalAsyncCallback<HashMap<String, String>>() {
+				new WTModalAsyncCallback<List<ImageDTO>>() {
 
 					// @Override
 					// public void onFailure(Throwable caught) {
@@ -127,20 +128,25 @@ public class CategoriesPane extends WTVerticalPane {
 					// }
 
 					@Override
-					public void handleResult(HashMap<String, String> result) {
+					public void handleResult(List<ImageDTO> result) {
 						// TODO Auto-generated method stub
 						// Récupération des commentaires
 						commentaires.clear();
-						imagesString = new ArrayList<String>(result.keySet());
+						imagesList = new HashMap<String, ImageDTO>();
 
 						// Conversion en HTML
 						commentaires = new HashMap<String, HTML>();
-						for (String image : imagesString) {
+						for (ImageDTO imageDTO : result) {
+
+							String image = imageDTO.getNomImage();
+
 							int index = image.indexOf(categorie.getDossier());
 							final String imageName = image.substring(index + 1
 									+ categorie.getDossier().length());
 							commentaires.put(imageName,
-									new HTML(result.get(image)));
+									new HTML(imageDTO.getCommentaires()));
+
+							imagesList.put(imageName, imageDTO);
 						}
 
 						// Affichage de la page courante
@@ -182,8 +188,8 @@ public class CategoriesPane extends WTVerticalPane {
 			images = new ArrayList<Image>();
 		}
 
-		if (imagesString == null) {
-			imagesString = new ArrayList<String>();
+		if (imagesList == null) {
+			imagesList = new HashMap<String, ImageDTO>();
 		}
 
 		imagesPanel = new WTVerticalPane() {
@@ -287,6 +293,11 @@ public class CategoriesPane extends WTVerticalPane {
 		title.setStyleName("titleCategorie");
 		imagesPanel.add(title);
 
+		// Informations sur le créateur
+		Label createur = new Label("Categorie creee par : "
+				+ categorie.getCreateur());
+		imagesPanel.add(createur);
+
 		// HorizontalPanel pour composants de la categorie
 		HorizontalPanel options = new HorizontalPanel();
 		options.setSpacing(8);
@@ -307,18 +318,21 @@ public class CategoriesPane extends WTVerticalPane {
 
 		imagesPanel.add(options);
 
+		// gestion de l'affichage
+		List<ImageDTO> list = new ArrayList<ImageDTO>(imagesList.values());
+
 		int indexDebut = 0;
 		int indexFin = 0;
 		if (current_page != 1) {
 			indexDebut = (current_page - 1) * 20;
-			if ((current_page - 1) * 20 + 20 >= imagesString.size()) {
-				indexFin = imagesString.size();
+			if ((current_page - 1) * 20 + 20 >= imagesList.size()) {
+				indexFin = imagesList.size();
 			} else {
 				indexFin = (current_page - 1) * 20 + 20;
 			}
 		} else {
-			if (20 >= imagesString.size()) {
-				indexFin = imagesString.size();
+			if (20 >= imagesList.size()) {
+				indexFin = imagesList.size();
 			} else {
 				indexFin = 20;
 			}
@@ -363,7 +377,9 @@ public class CategoriesPane extends WTVerticalPane {
 				WTDialogBox dialogBox = new WTDialogBox(newHtml, html2,
 						addCommButton);
 
-				dialogBox.get().setText("Image XXX");
+				dialogBox.get().setText(
+						"Image postee par "
+								+ imagesList.get(imageName).getPosteur());
 
 				dialogBox.get().setAnimationEnabled(false);
 				dialogBox.get().center();
@@ -391,8 +407,8 @@ public class CategoriesPane extends WTVerticalPane {
 		}
 
 		// découpage en pages
-		int nbPages = imagesString.size() / 20;
-		int reste = imagesString.size() % 20;
+		int nbPages = imagesList.size() / 20;
+		int reste = imagesList.size() % 20;
 		if (reste != 0 && nbPages >= 1) {
 			nbPages++;
 		}
@@ -426,7 +442,7 @@ public class CategoriesPane extends WTVerticalPane {
 
 			}
 
-			Image image = new Image(imagesString.get(i));
+			Image image = new Image(list.get(i).getNomImage());
 			images.add(image);
 			image.addClickHandler(new ImageHandler());
 			image.setStyleName("div_image");

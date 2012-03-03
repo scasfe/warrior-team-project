@@ -8,8 +8,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import fr.warriorteam.dto.ImageDTO;
 import fr.warriorteam.rpc.FileUploadService;
 import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.PropertiesUtils;
@@ -37,7 +39,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 	 */
 	// private LoginService loginService = new LoginServiceImpl();
 
-	public HashMap<String, String> uploadFile(String path)
+	public List<ImageDTO> uploadFile(String path)
 			throws IllegalArgumentException {
 
 		// TODO a enlever - pour tester le d
@@ -47,6 +49,9 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		if (!LoginServiceImpl.checkSession(session)) {
 			throw new IllegalArgumentException("Vous n'êtes pas connecté !");
 		}
+
+		// Le résultat retourné
+		List<ImageDTO> result = new ArrayList<ImageDTO>();
 
 		// HttpSession session = getThreadLocalRequest().getSession();
 		//
@@ -61,8 +66,8 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		images = file.listFiles();
 		// }
 
-		// Map key: url photo, value : commentaires
-		HashMap<String, String> imagesList = new HashMap<String, String>();
+		// // Map key: url photo, value : commentaires
+		// HashMap<String, String> imagesList = new HashMap<String, String>();
 
 		// s'il y a des images dansR le dossier
 		if (images != null) {
@@ -76,10 +81,19 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 				// String commentaire =
 				// imageService.searchCommentaires(image.getName());
 
-				String commentaires = searchCommentairesFromDB(image.getName());
-				// TODO à virer pour tester return commentaire unique
-				imagesList.put("images/resize/" + path + "/" + image.getName(),
-						commentaires);
+				// Construction du DTO
+				ImageDTO dto = new ImageDTO();
+
+				dto.setNomImage("images/resize/" + path + "/" + image.getName());
+
+				List<String> commPosteur = searchCommentairesAndPosteurFromDB(image
+						.getName());
+				if (commPosteur != null && commPosteur.size() > 1) {
+					dto.setPosteur(commPosteur.get(0));
+					dto.setCommentaires(commPosteur.get(1));
+				}
+
+				result.add(dto);
 
 			}
 
@@ -87,10 +101,12 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 		// }
 
-		return imagesList;
+		return result;
 	}
 
-	private String searchCommentairesFromDB(String name) {
+	private List<String> searchCommentairesAndPosteurFromDB(String name) {
+
+		List<String> commentaires = null;
 
 		HttpSession session = getThreadLocalRequest().getSession();
 
@@ -99,10 +115,11 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		boolean sessionValide = LoginServiceImpl.checkSession(session);
 
 		if (!sessionValide) {
-			return "Vous devez être connecté pour voir les commentaires !";
+			commentaires = new ArrayList<String>();
+			commentaires
+					.add("Vous devez être connecté pour voir les commentaires !");
+			return commentaires;
 		}
-
-		String commentaires = null;
 
 		Connection connection;
 
@@ -112,7 +129,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 			// Création de la requête
 			StringBuilder query = new StringBuilder();
-			query.append("SELECT commentaires FROM image WHERE nom_image = '"
+			query.append("SELECT posteur, commentaires FROM image WHERE nom_image = '"
 					+ name + "'");
 
 			// Création d'un objet Statement
@@ -123,10 +140,11 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 
 			Integer nbNews = 0;
 			while (result.next()) {
+				commentaires = new ArrayList<String>();
 
-				for (int i = 1; i <= resultMeta.getColumnCount(); i++) {
-					commentaires = result.getObject(i).toString();
-				}
+				commentaires.add(result.getObject(1).toString());
+				commentaires.add(result.getObject(2).toString());
+
 			}
 
 			result.close();
@@ -193,7 +211,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 				+ "<br/>";
 
 		StringBuilder commentaireToAdd = new StringBuilder();
-		commentaireToAdd.append(searchCommentairesFromDB(imageName));
+		commentaireToAdd.append(searchCommentairesAndPosteurFromDB(imageName));
 		commentaireToAdd.append(commHTML);
 
 		// Préparation du résultat

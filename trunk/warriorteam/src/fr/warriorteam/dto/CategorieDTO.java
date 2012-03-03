@@ -12,6 +12,7 @@ public class CategorieDTO implements Serializable {
 	private String nomCategorie;
 	private String dossier;
 	private String date;
+	private String createur;
 
 	public Long getId() {
 		return id;
@@ -43,6 +44,14 @@ public class CategorieDTO implements Serializable {
 
 	public String getDate() {
 		return date;
+	}
+
+	public String getCreateur() {
+		return createur;
+	}
+
+	public void setCreateur(String createur) {
+		this.createur = createur;
 	}
 
 }

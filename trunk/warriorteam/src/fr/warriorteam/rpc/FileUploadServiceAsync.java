@@ -1,12 +1,14 @@
 package fr.warriorteam.rpc;
 
-import java.util.HashMap;
+import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import fr.warriorteam.dto.ImageDTO;
+
 public interface FileUploadServiceAsync {
 
-	void uploadFile(String path, AsyncCallback<HashMap<String, String>> callback);
+	void uploadFile(String path, AsyncCallback<List<ImageDTO>> callback);
 
 	void createZip(String fileName, AsyncCallback<String> callback);
 

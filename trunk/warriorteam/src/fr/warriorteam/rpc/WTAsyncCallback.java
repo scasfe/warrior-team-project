@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fr.warriorteam.client.pane.WTModalWaitPane;
+import fr.warriorteam.server.exception.WebFonctionnelleException;
 
 public abstract class WTAsyncCallback<T> implements AsyncCallback<T> {
 
@@ -27,9 +28,12 @@ public abstract class WTAsyncCallback<T> implements AsyncCallback<T> {
 		GWT.log("APPEL DE SERVICE RPC : " + this.getClass()
 				+ " : echec (temps total = " + time + ")");
 
-		Window.alert("ERREUR SERVEUR NON PREVUE"
-				+ "Libelle de l'erreur dans les logs serveur : "
-				+ t.getMessage());
+		if (t instanceof WebFonctionnelleException) {
+			Window.alert(t.getMessage());
+		} else {
+			Window.alert("ERREUR SERVEUR NON PREVUE"
+					+ "Libelle de l'erreur dans les logs serveur : ");
+		}
 
 		handleFailure(t);
 	}

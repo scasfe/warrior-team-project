@@ -24,6 +24,7 @@
   <source path='rpc/dto'/>
    <source path='dto'/>
   <source path='server/utils'/>
+   <source path='server/exception'/>
   <source path='shared'/>
 
  <!-- Specify the paths for the CSS                -->

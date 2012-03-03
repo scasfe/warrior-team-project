@@ -78,9 +78,9 @@ public class PropertiesUtils {
 		String propertyValue = properties.getProperty(key);
 
 		if (propertyValue != null) {
-			logger.debug("Property trouvée : " + key + "=" + propertyValue);
+			// logger.debug("Property trouvée : " + key + "=" + propertyValue);
 		} else {
-			logger.debug("Property non trouvée : " + key);
+			logger.error("Property non trouvée : " + key);
 		}
 
 		return propertyValue;
