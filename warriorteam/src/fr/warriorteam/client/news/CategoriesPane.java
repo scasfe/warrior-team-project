@@ -364,6 +364,9 @@ public class CategoriesPane extends WTVerticalPane {
 						+ MAX_WIDTH + "\" height=\"" + MAX_HEIGHT + "\" />";
 
 				HTML newHtml = new HTML(htmlImage);
+
+				// Process panel
+				HorizontalPanel processPanel = new HorizontalPanel();
 				Button addCommButton = new Button("Ajouter commentaire");
 				addCommButton.setPixelSize(150, 30);
 				addCommButton.addClickHandler(new ClickHandler() {
@@ -373,9 +376,24 @@ public class CategoriesPane extends WTVerticalPane {
 
 					}
 				});
+				processPanel.add(addCommButton);
+				Button suppImageButton = new Button("Supprimer image");
+				suppImageButton.setPixelSize(150, 30);
+				suppImageButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						if (Window
+								.confirm("Etes-vous sur de supprimer l'image "
+										+ imageName + " ?")) {
+							deleteImage(imagesList.get(imageName));
+						}
 
-				WTDialogBox dialogBox = new WTDialogBox(newHtml, html2,
-						addCommButton);
+					}
+
+				});
+				processPanel.add(suppImageButton);
+
+				WTDialogBox dialogBox = new WTDialogBox(newHtml, processPanel,
+						html2);
 
 				dialogBox.get().setText(
 						"Image postee par "
@@ -449,6 +467,22 @@ public class CategoriesPane extends WTVerticalPane {
 			ligneImages.add(image);
 
 		}
+
+	}
+
+	private static void deleteImage(ImageDTO imageDto) {
+		// Appel du service RPC ajout catégorie
+		imagesService.deleteImage(imageDto, new WTModalAsyncCallback<String>() {
+
+			@Override
+			public void handleResult(String result) {
+
+				// Redirection vers l'accueil car la catégorie
+				// n'existe plus
+				CategoriesPane.getInstance().reloadData();
+
+			}
+		});
 
 	}
 
