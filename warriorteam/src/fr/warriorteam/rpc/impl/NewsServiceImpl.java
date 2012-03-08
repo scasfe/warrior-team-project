@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -33,9 +35,10 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 	 */
 	// private LoginService loginService = new LoginServiceImpl();
 
-	public NewsDTO searchLastNews() throws IllegalArgumentException {
+	public List<NewsDTO> searchLastNews() throws IllegalArgumentException {
 
-		NewsDTO results = new NewsDTO();
+		ArrayList<NewsDTO> resultDTOs = new ArrayList<NewsDTO>();
+
 		HttpSession session = getThreadLocalRequest().getSession();
 
 		// Si l'utilisaéteur est connecté, il peut voir les news réservées aux
@@ -90,11 +93,25 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 			resultMeta = result.getMetaData();
 
 			while (result.next()) {
+				NewsDTO newsDto = new NewsDTO();
 
-				for (int i = 1; i <= resultMeta.getColumnCount(); i++) {
-					String news = result.getObject(i).toString();
-					results.getLogin().add(news);
+				newsDto.setDate(result.getObject(1).toString());
+				newsDto.setTitre(result.getObject(2).toString());
+				newsDto.setTexte(result.getObject(3).toString());
+
+				// Traitement du booléen
+				int reservee = Integer.valueOf(result.getObject(4).toString());
+				if (reservee == 1) {
+					newsDto.setReservee(true);
+				} else {
+					newsDto.setReservee(false);
 				}
+
+				resultDTOs.add(newsDto);
+				// for (int i = 1; i <= resultMeta.getColumnCount(); i++) {
+				// String news = result.getObject(i).toString();
+				// results.getLogin().add(news);
+				// }
 			}
 
 			result.close();
@@ -108,7 +125,7 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 			throw new IllegalArgumentException("Problème interne du serveur");
 		}
 
-		return results;
+		return resultDTOs;
 	}
 
 	public CategoriesDTO searchCategories() throws IllegalArgumentException {
