@@ -1,8 +1,6 @@
 package fr.warriorteam.rpc.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * TODO
@@ -20,14 +18,44 @@ public class NewsDTO implements Serializable {
 	 * 
 	 */
 
-	private List<String> login = new ArrayList<String>();
+	private String date;
 
-	public List<String> getLogin() {
-		return login;
+	private String titre;
+
+	private String texte;
+
+	private Boolean reservee;
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 
-	public void setLogin(List<String> login) {
-		this.login = login;
+	public String getDate() {
+		return date;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTexte(String texte) {
+		this.texte = texte;
+	}
+
+	public String getTexte() {
+		return texte;
+	}
+
+	public void setReservee(Boolean reservee) {
+		this.reservee = reservee;
+	}
+
+	public Boolean getReservee() {
+		return reservee;
 	}
 
 }

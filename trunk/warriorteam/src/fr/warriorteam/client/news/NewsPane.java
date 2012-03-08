@@ -1,15 +1,16 @@
 package fr.warriorteam.client.news;
 
-import fr.warriorteam.client.WTVerticalPane;
+import java.util.List;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+import fr.warriorteam.client.WTVerticalPane;
 import fr.warriorteam.rpc.NewsService;
 import fr.warriorteam.rpc.NewsServiceAsync;
 import fr.warriorteam.rpc.dto.NewsDTO;
-
-import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>. Classe d'entrée
@@ -30,7 +31,7 @@ public class NewsPane extends WTVerticalPane {
 	/**
 	 * Le contenu HTML de ce pane centre
 	 */
-	private static HTML contenu;
+	private static VerticalPanel contenu;
 
 	private NewsPane() {
 
@@ -56,19 +57,28 @@ public class NewsPane extends WTVerticalPane {
 
 		// Check de session avant tout
 
-		newsService.searchLastNews(new AsyncCallback<NewsDTO>() {
+		newsService.searchLastNews(new AsyncCallback<List<NewsDTO>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub
-				contenu.setHTML("FAIL APPEL RPC "
-						+ caught.getLocalizedMessage() + caught.getMessage());
+				contenu.clear();
+				contenu.add(new HTML("FAIL APPEL RPC "
+						+ caught.getLocalizedMessage() + caught.getMessage()));
 			}
 
 			@Override
-			public void onSuccess(NewsDTO result) {
+			public void onSuccess(List<NewsDTO> result) {
 				// TODO Auto-generated method stub
-				contenu.setHTML(result.getLogin().toString());
+				contenu.clear();
+				for (NewsDTO news : result) {
+					// Le contenu de la news en détail
+					VerticalPanel newsPanel = new VerticalPanel();
+					newsPanel.add(new HTML("Poste le " + news.getDate()));
+					newsPanel.add(new HTML(news.getTitre()));
+					newsPanel.add(new HTML(news.getTexte()));
+					contenu.add(newsPanel);
+				}
 
 			}
 		});
@@ -83,7 +93,7 @@ public class NewsPane extends WTVerticalPane {
 		instance.getElement().setId("corps");
 
 		// les fonctions HTML
-		contenu = new HTML();
+		contenu = new VerticalPanel();
 		instance.add(contenu);
 
 	}
