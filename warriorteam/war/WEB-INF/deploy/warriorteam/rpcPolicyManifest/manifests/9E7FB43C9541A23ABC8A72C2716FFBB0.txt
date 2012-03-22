@@ -1,2 +1,0 @@
-serviceClass: fr.warriorteam.rpc.LoginService
-path: 8A1DE11FA2B5461AB4BD7E1C4B91D1AF.gwt.rpc
