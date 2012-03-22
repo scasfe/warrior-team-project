@@ -74,9 +74,13 @@ public class NewsPane extends WTVerticalPane {
 				for (NewsDTO news : result) {
 					// Le contenu de la news en détail
 					VerticalPanel newsPanel = new VerticalPanel();
-					newsPanel.add(new HTML("Poste le " + news.getDate()));
-					newsPanel.add(new HTML(news.getTitre()));
+					newsPanel.add(new HTML(
+							"Poste le <span class=\"jaune_gras\">"
+									+ news.getDate() + "</span>"));
+					newsPanel.add(new HTML("<h3><span class=\"blanc_gras\">"
+							+ news.getTitre() + "</span></h3>"));
 					newsPanel.add(new HTML(news.getTexte()));
+					newsPanel.setStyleName("element_corps");
 					contenu.add(newsPanel);
 				}
 

@@ -45,7 +45,7 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 		// connectés
 		boolean sessionValide = LoginServiceImpl.checkSession(session);
 
-		Connection connection;
+		Connection connection = null;
 
 		try {
 
@@ -95,17 +95,18 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 			while (result.next()) {
 				NewsDTO newsDto = new NewsDTO();
 
-				newsDto.setDate(result.getObject(1).toString());
-				newsDto.setTitre(result.getObject(2).toString());
-				newsDto.setTexte(result.getObject(3).toString());
+				newsDto.setDate(result.getObject(2).toString());
+				newsDto.setTitre(result.getObject(3).toString());
+				newsDto.setTexte(result.getObject(4).toString());
 
 				// Traitement du booléen
-				int reservee = Integer.valueOf(result.getObject(4).toString());
-				if (reservee == 1) {
-					newsDto.setReservee(true);
-				} else {
-					newsDto.setReservee(false);
-				}
+				// int reservee =
+				// Integer.valueOf(result.getObject(5).toString());
+				// if (reservee == 1) {
+				// newsDto.setReservee(true);
+				// } else {
+				// newsDto.setReservee(false);
+				// }
 
 				resultDTOs.add(newsDto);
 				// for (int i = 1; i <= resultMeta.getColumnCount(); i++) {
@@ -123,7 +124,16 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 			logger.error("Erreur SQL : ", e);
 
 			throw new IllegalArgumentException("Problème interne du serveur");
+		}finally {
+			try {
+				if(connection != null){
+				connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("Erreur SQL : ", e);
+			}
 		}
+
 
 		return resultDTOs;
 	}
@@ -134,7 +144,7 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 		HttpSession session = getThreadLocalRequest().getSession();
 
 		if (LoginServiceImpl.checkSession(session)) {
-			Connection connection;
+			Connection connection = null;
 
 			try {
 
@@ -179,7 +189,16 @@ public class NewsServiceImpl extends RemoteServiceServlet implements
 
 				throw new IllegalArgumentException(
 						"Problème interne du serveur");
+			}finally {
+				try {
+					if(connection != null){
+					connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error("Erreur SQL : ", e);
+				}
 			}
+
 
 		}
 

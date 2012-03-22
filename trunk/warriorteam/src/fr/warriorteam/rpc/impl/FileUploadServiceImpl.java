@@ -122,7 +122,7 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 			return commentaires;
 		}
 
-		Connection connection;
+		Connection connection = null;
 
 		try {
 
@@ -159,7 +159,16 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 			logger.error("Erreur SQL : ", e);
 
 			throw new IllegalArgumentException("Problème interne du serveur");
+		}finally {
+			try {
+				if(connection != null){
+				connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("Erreur SQL : ", e);
+			}
 		}
+
 
 		return commentaires;
 	}
@@ -224,10 +233,11 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 		String commAjoute = "";
 		String message = "";
 
-		Connection connection;
+		Connection connection = null;
 
 		try {
 
+			
 			connection = DAOFactory.getConnection();
 
 			// TODO - Mettre la bonne date dans la requête
@@ -259,6 +269,14 @@ public class FileUploadServiceImpl extends RemoteServiceServlet implements
 			logger.error("Erreur SQL : ", e);
 
 			throw new IllegalArgumentException("Problème interne du serveur");
+		} finally {
+			try {
+				if(connection != null){
+				connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("Erreur SQL : ", e);
+			}
 		}
 
 		String[] result = { message, commAjoute };

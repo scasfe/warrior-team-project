@@ -8,6 +8,8 @@ import java.util.HashSet;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import fr.warriorteam.rpc.LoginService;
@@ -22,6 +24,8 @@ import fr.warriorteam.shared.FieldVerifier;
 public class LoginServiceImpl extends RemoteServiceServlet implements
 		LoginService {
 
+	private final Logger logger = Logger.getLogger(LoginServiceImpl.class);
+	
 	private static final HashSet<HttpSession> sessionActiveList = new HashSet<HttpSession>();
 
 	public String login(LoginDTO input) throws IllegalArgumentException {
@@ -45,7 +49,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 
 		StringBuilder msg = new StringBuilder();
 
-		Connection connection;
+		Connection connection = null;
 
 		try {
 
@@ -77,7 +81,16 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		} catch (SQLException e) {
 			// TODO logger erreur
 			throw new IllegalArgumentException("Problème interne du serveur");
+		}finally {
+			try {
+				if(connection != null){
+				connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("Erreur SQL : ", e);
+			}
 		}
+
 
 		HttpSession session = getThreadLocalRequest().getSession();
 		// TODO - Récupérer la bonne session à partir de la requête

@@ -21,6 +21,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 
+import fr.warriorteam.rpc.impl.LoginServiceImpl;
 import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.ImagesUtils;
 import fr.warriorteam.server.utils.PropertiesUtils;
@@ -37,8 +38,15 @@ public class UploadServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// Infos de session
+		// session
 		HttpSession session = request.getSession();
+
+		// Check de session
+		if (!LoginServiceImpl.checkSession(session)) {
+			throw new IllegalArgumentException("Vous n'êtes pas connecté !");
+		}
+
+		// Infos de session
 		String user_id = (String) session.getAttribute("pseudo");
 
 		ServletFileUpload upload = new ServletFileUpload();
@@ -158,7 +166,7 @@ public class UploadServlet extends HttpServlet {
 	private void addAuthorAndDateOnDB(String imageName, String categorie,
 			String userId) {
 
-		Connection connection;
+		Connection connection = null;
 
 		try {
 
@@ -189,13 +197,23 @@ public class UploadServlet extends HttpServlet {
 
 			logger.debug("Image ajoutée en base : " + userId + " - "
 					+ imageName + " - " + categorie);
+			
+
 
 		} catch (SQLException e) {
 
-			// TODO logger erreur
 			logger.error("Erreur SQL : ", e);
 
 			throw new IllegalArgumentException("Problème interne du serveur");
+		} finally{
+//			fermeture connection
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.error("Erreur SQL : ", e);
+				}
+			}
 		}
 
 	}
