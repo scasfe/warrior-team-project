@@ -110,8 +110,8 @@ public class WTLoginPane extends VerticalPanel {
 		loginInput.setSize("50", "10");
 		passwordInput.setSize("50", "10");
 
-		createButton.setEnabled(true);
-		createButton.setEnabled(true);
+//		createButton.setEnabled(true);
+//		createButton.setEnabled(true);
 		deconnectionButton.setEnabled(true);
 
 		// Définition de la taille des boutons
@@ -153,7 +153,7 @@ public class WTLoginPane extends VerticalPanel {
 		dialogBox.getCloseButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				dialogBox.get().hide();
-				createButton.setEnabled(true);
+//				createButton.setEnabled(true);
 				connectButton.setEnabled(true);
 
 				connectButton.setFocus(true);
@@ -284,7 +284,7 @@ public class WTLoginPane extends VerticalPanel {
 						// on affiche l'écran de login
 						panel1.setVisible(true);
 						connectButton.setVisible(true);
-						createButton.setVisible(true);
+//						createButton.setVisible(true);
 						deconnectionButton.setVisible(false);
 
 						// On recharge tous les widgets pour désactiver les
