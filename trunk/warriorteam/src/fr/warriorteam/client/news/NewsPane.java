@@ -48,7 +48,6 @@ public class NewsPane extends WTVerticalPane {
 			setup();
 
 		}
-		loadDynamicData();
 		return instance;
 	}
 
@@ -99,6 +98,9 @@ public class NewsPane extends WTVerticalPane {
 		// les fonctions HTML
 		contenu = new VerticalPanel();
 		instance.add(contenu);
+		
+		// premier chargement du contenu
+		loadDynamicData();
 
 	}
 

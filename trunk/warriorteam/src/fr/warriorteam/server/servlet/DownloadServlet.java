@@ -9,7 +9,6 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,7 +17,7 @@ import org.apache.log4j.Logger;
 import fr.warriorteam.server.utils.PropertiesUtils;
 import fr.warriorteam.server.utils.ZipFileWriter;
 
-public class DownloadServlet extends HttpServlet {
+public class DownloadServlet extends WTServlet {
 
 	/**
 	 * 
@@ -29,8 +28,8 @@ public class DownloadServlet extends HttpServlet {
 
 	private final Logger logger = Logger.getLogger(DownloadServlet.class);
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doProcess(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		String categorieName = request.getParameter("path");
 		// String filename = creerZip(categorieName);
 

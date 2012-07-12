@@ -15,12 +15,14 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import fr.warriorteam.dto.ImageDTO;
 import fr.warriorteam.rpc.FileUploadService;
 import fr.warriorteam.server.exception.WebFonctionnelleException;
+import fr.warriorteam.server.servlet.WTRemoteService;
 import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.PropertiesUtils;
 import fr.warriorteam.server.utils.ZipFileWriter;
@@ -30,7 +32,7 @@ import fr.warriorteam.server.utils.ZipFileWriter;
  */
 
 @SuppressWarnings("serial")
-public class FileUploadServiceImpl extends RemoteServiceServlet implements
+public class FileUploadServiceImpl extends WTRemoteService implements
 		FileUploadService {
 
 	private final Logger logger = Logger.getLogger(FileUploadServiceImpl.class);

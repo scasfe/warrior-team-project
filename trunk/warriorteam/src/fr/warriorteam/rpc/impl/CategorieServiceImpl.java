@@ -15,6 +15,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import fr.warriorteam.dto.CategorieDTO;
 import fr.warriorteam.rpc.CategorieService;
 import fr.warriorteam.server.exception.WebFonctionnelleException;
+import fr.warriorteam.server.servlet.WTRemoteService;
 import fr.warriorteam.server.utils.DAOFactory;
 
 /**
@@ -22,7 +23,7 @@ import fr.warriorteam.server.utils.DAOFactory;
  */
 
 @SuppressWarnings("serial")
-public class CategorieServiceImpl extends RemoteServiceServlet implements
+public class CategorieServiceImpl extends WTRemoteService implements
 		CategorieService {
 
 	private final Logger logger = Logger.getLogger(CategorieServiceImpl.class);
