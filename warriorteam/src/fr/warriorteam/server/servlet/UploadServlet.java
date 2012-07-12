@@ -11,7 +11,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -26,7 +25,7 @@ import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.server.utils.ImagesUtils;
 import fr.warriorteam.server.utils.PropertiesUtils;
 
-public class UploadServlet extends HttpServlet {
+public class UploadServlet extends WTServlet {
 
 	/**
 	 * 
@@ -35,9 +34,67 @@ public class UploadServlet extends HttpServlet {
 
 	private final Logger logger = Logger.getLogger(UploadServlet.class);
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		doPost(request, response);
+	}
 
+	private void addAuthorAndDateOnDB(String imageName, String categorie,
+			String userId) {
+
+		Connection connection = null;
+
+		try {
+
+			connection = DAOFactory.getConnection();
+
+			// TODO - Mettre la bonne date dans la requête
+
+			// Création de la requête
+			StringBuilder query = new StringBuilder();
+			query.append("INSERT INTO image (categorie_fk, nom_image, posteur, date, commentaires) VALUES("
+					+ "'"
+					+ categorie
+					+ "','"
+					+ imageName
+					+ "','"
+					+ userId
+					+ "','" + "2012-02-25" + "', '')");
+
+			// Création d'un objet Statement
+			java.sql.PreparedStatement state = connection
+					.prepareStatement(query.toString());
+			// L'objet ResultSet contient le résultat de la requête SQL
+			int result = state.executeUpdate();
+			// ResultSetMetaData resultMeta = result.getMetaData();
+
+			// result.close();
+			state.close();
+
+			logger.debug("Image ajoutée en base : " + userId + " - "
+					+ imageName + " - " + categorie);
+
+		} catch (SQLException e) {
+
+			logger.error("Erreur SQL : ", e);
+
+			throw new IllegalArgumentException("Problème interne du serveur");
+		} finally {
+			// fermeture connection
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.error("Erreur SQL : ", e);
+				}
+			}
+		}
+
+	}
+
+	@Override
+	protected void doProcess(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// session
 		HttpSession session = request.getSession();
 
@@ -154,66 +211,6 @@ public class UploadServlet extends HttpServlet {
 		} catch (Exception e) {
 			logger.error("Erreur lors de l'upload du fichier ", e);
 			throw new RuntimeException(e);
-		}
-
-	}
-
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doPost(request, response);
-	}
-
-	private void addAuthorAndDateOnDB(String imageName, String categorie,
-			String userId) {
-
-		Connection connection = null;
-
-		try {
-
-			connection = DAOFactory.getConnection();
-
-			// TODO - Mettre la bonne date dans la requête
-
-			// Création de la requête
-			StringBuilder query = new StringBuilder();
-			query.append("INSERT INTO image (categorie_fk, nom_image, posteur, date, commentaires) VALUES("
-					+ "'"
-					+ categorie
-					+ "','"
-					+ imageName
-					+ "','"
-					+ userId
-					+ "','" + "2012-02-25" + "', '')");
-
-			// Création d'un objet Statement
-			java.sql.PreparedStatement state = connection
-					.prepareStatement(query.toString());
-			// L'objet ResultSet contient le résultat de la requête SQL
-			int result = state.executeUpdate();
-			// ResultSetMetaData resultMeta = result.getMetaData();
-
-			// result.close();
-			state.close();
-
-			logger.debug("Image ajoutée en base : " + userId + " - "
-					+ imageName + " - " + categorie);
-			
-
-
-		} catch (SQLException e) {
-
-			logger.error("Erreur SQL : ", e);
-
-			throw new IllegalArgumentException("Problème interne du serveur");
-		} finally{
-//			fermeture connection
-			if(connection != null){
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					logger.error("Erreur SQL : ", e);
-				}
-			}
 		}
 
 	}

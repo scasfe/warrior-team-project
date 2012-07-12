@@ -50,7 +50,7 @@ public class DAOFactory {
 			throw new IllegalArgumentException("Problème interne du serveur");
 		}
 
-		logger.debug(msg.toString());
+		//logger.debug(msg.toString());
 
 		return connection;
 	}

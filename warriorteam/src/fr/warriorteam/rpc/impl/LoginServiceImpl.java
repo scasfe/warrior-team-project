@@ -9,11 +9,13 @@ import java.util.HashSet;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import fr.warriorteam.rpc.LoginService;
 import fr.warriorteam.rpc.dto.LoginDTO;
+import fr.warriorteam.server.servlet.WTRemoteService;
 import fr.warriorteam.server.utils.DAOFactory;
 import fr.warriorteam.shared.FieldVerifier;
 
@@ -21,7 +23,7 @@ import fr.warriorteam.shared.FieldVerifier;
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
-public class LoginServiceImpl extends RemoteServiceServlet implements
+public class LoginServiceImpl extends WTRemoteService implements
 		LoginService {
 
 	private final Logger logger = Logger.getLogger(LoginServiceImpl.class);
@@ -75,6 +77,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 			result.close();
 			state.close();
 			if (nbResults != 1) {
+				logger.debug("Connection de "+input.getLogin()+" IMPOSSIBLE USER INEXISTANT");
 				throw new IllegalArgumentException(
 						"Login et/ou password incorrect(s)");
 			}
@@ -94,10 +97,16 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 
 		HttpSession session = getThreadLocalRequest().getSession();
 		// TODO - Récupérer la bonne session à partir de la requête
+		
+		logger.debug("Connection de "+input.getLogin()+" réussie");
+		
 		session.setAttribute("user_id", "1");
 		session.setAttribute("pseudo", input.getLogin());
+		session.setAttribute("session_id", session.getId());
 		sessionActiveList.add(session);
-
+		
+		
+		
 		return "Hello, " + input.getLogin() + "!<br><br>" + "I am running "
 				+ serverInfo + ".<br><br>It looks like you are using:<br>"
 				+ userAgent + msg.toString();

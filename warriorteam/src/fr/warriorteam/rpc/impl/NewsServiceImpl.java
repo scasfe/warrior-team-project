@@ -18,6 +18,7 @@ import fr.warriorteam.dto.CategorieDTO;
 import fr.warriorteam.rpc.NewsService;
 import fr.warriorteam.rpc.dto.CategoriesDTO;
 import fr.warriorteam.rpc.dto.NewsDTO;
+import fr.warriorteam.server.servlet.WTRemoteService;
 import fr.warriorteam.server.utils.DAOFactory;
 
 /**
@@ -25,7 +26,7 @@ import fr.warriorteam.server.utils.DAOFactory;
  */
 
 @SuppressWarnings("serial")
-public class NewsServiceImpl extends RemoteServiceServlet implements
+public class NewsServiceImpl extends WTRemoteService implements
 		NewsService {
 
 	private final Logger logger = Logger.getLogger(NewsServiceImpl.class);
