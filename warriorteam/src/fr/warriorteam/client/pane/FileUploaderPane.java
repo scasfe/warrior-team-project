@@ -27,11 +27,14 @@ public class FileUploaderPane extends FormPanel {
 		holder.add(fu);
 		holder.add(new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (fu.getFilename().length() > 0) {
+					// Modal wait
+					WTModalWaitPane.getInstance().setVisible(true);
+					WTModalWaitPane.getInstance().center();
+					GWT.log("You selected: " + fu.getFilename(), null);
 
-				WTModalWaitPane.getInstance().setVisible(true);
-				WTModalWaitPane.getInstance().center();
-				GWT.log("You selected: " + fu.getFilename(), null);
-				submit();
+					submit();
+				}
 
 			}
 		}));
