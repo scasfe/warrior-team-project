@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee">
+
+  <!-- Servlets -->
+  
+  <servlet>
+		<servlet-name>context</servlet-name>
+		<servlet-class> fr.warriorteam.server.servlet.ContextLoaderServlet</servlet-class>
+		<!-- ordre de chargement : AVANT "WtStartupServlet" -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+  
+  <servlet>
+    <servlet-name>greetServlet</servlet-name>
+    <servlet-class>fr.warriorteam.rpc.impl.LoginServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>greetServlet</servlet-name>
+    <url-pattern>/warriorteam/greet</url-pattern>
+  </servlet-mapping>
+  
+    <servlet>
+    <servlet-name>newsServlet</servlet-name>
+    <servlet-class>fr.warriorteam.rpc.impl.NewsServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>newsServlet</servlet-name>
+    <url-pattern>/warriorteam/news</url-pattern>
+  </servlet-mapping>
+  
+      <servlet>
+    <servlet-name>uploadServlet</servlet-name>
+    <servlet-class>fr.warriorteam.rpc.impl.FileUploadServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>uploadServlet</servlet-name>
+    <url-pattern>/warriorteam/upload</url-pattern>
+  </servlet-mapping>
+  
+        <servlet>
+    <servlet-name>categorieServlet</servlet-name>
+    <servlet-class>fr.warriorteam.rpc.impl.CategorieServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>categorieServlet</servlet-name>
+    <url-pattern>/warriorteam/categorie</url-pattern>
+  </servlet-mapping>
+  
+  <servlet> 
+    <servlet-name>fileUploader</servlet-name> 
+    <servlet-class>fr.warriorteam.server.servlet.UploadServlet</servlet-class> 
+</servlet> 
+<servlet-mapping> 
+  <servlet-name>fileUploader</servlet-name> 
+  <url-pattern>/fileupload.do</url-pattern> 
+</servlet-mapping> 
+
+  <servlet> 
+    <servlet-name>fileDownloader</servlet-name> 
+    <servlet-class>fr.warriorteam.server.servlet.DownloadServlet</servlet-class> 
+</servlet> 
+<servlet-mapping> 
+  <servlet-name>fileDownloader</servlet-name> 
+  <url-pattern>/filedownload.do</url-pattern> 
+</servlet-mapping> 
+  
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Warriorteam.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

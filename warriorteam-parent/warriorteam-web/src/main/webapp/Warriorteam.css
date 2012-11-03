@@ -1,0 +1,324 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+
+  text-align: center;
+}
+
+.titleCategorie {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+
+  text-align: center;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+.root{
+	 background-image: url("images/fond.png");;
+	   scrollbar-face-color: red;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
+   
+.infobulle{
+	        position: absolute;	
+	        visibility : hidden;
+	        border: 1px solid Black;
+	        padding: 10px;
+	        font-family: Verdana, Arial;
+	        font-size: 10px;
+	        background-color: #FFFFCC;
+        }
+
+
+/* L'en-tête */
+
+#en_tete
+{
+   width: 100%;
+   height: 123px;
+   background-image: url("images/banniere.png");
+   background-repeat: no-repeat;
+   margin-bottom: 10px;
+   border: 2px solid black;
+   background-color: #a6a6a6;
+}
+
+#element_center
+{
+width: 100%;
+  
+   
+   /*background-repeat: repeat-x;*/
+   padding-left: 15px;
+   padding-right: 15px;
+   border: 2px solid black;
+   
+   margin-bottom: 10px; /* Pour éviter que les éléments du menu ne soient trop collés */
+}
+
+.align_droite{
+text-align: right;
+}
+
+.align_centre{
+text-align: center;
+}
+
+/* Le menu */
+
+#menuG
+{
+   float: left; /* Le menu flottera à gauche */
+   width: 15%; /* Très important : donner une taille au menu */
+}
+
+#menuD
+{
+   float: right; /* Le menu flottera à droite */
+   width: 15%; /* Très important : donner une taille au menu */
+}
+
+.element_menu
+{
+	width: 150px;
+   background-color: #626262;
+   background-image: url("images/motif.png");
+   background-repeat: repeat-x;
+   padding-left: 5px;
+   border: 2px solid black;
+   
+   margin-bottom: 10px; /* Pour éviter que les éléments du menu ne soient trop collés */
+}
+
+/* le centre (news) */
+.element_corps
+{
+	width:100%;
+	
+   margin-left: 0px; /* Une marge à gauche pour pousser le corps, afin qu'il ne passe plus sous le menu */
+    margin-right: 0px;
+   margin-bottom: 20px; /* Ca c'est pour éviter que le corps colle trop au pied de page en-dessous */
+   padding: 10px; /* Pour éviter que le texte à l'intérieur du corps ne colle trop à la bordure */
+   
+   color: #B3B3B3;
+   background-color: #626262; /* Une couleur de fond pour le corps */
+ 
+   /*background-repeat: repeat-x; /* Une petite image de fond qui se répètera horizontalement en haut */
+   
+   border: 2px solid black; /* Une bordure pour bien marquer les limites du corps et pour faire joli */
+   
+ 
+   
+}
+
+#corps
+{
+	width:100%;
+	
+   margin-left: 0px; /* Une marge à gauche pour pousser le corps, afin qu'il ne passe plus sous le menu */
+    margin-right: 0px;
+   margin-bottom: 20px; /* Ca c'est pour éviter que le corps colle trop au pied de page en-dessous */
+   padding: 10px; /* Pour éviter que le texte à l'intérieur du corps ne colle trop à la bordure */
+   
+   color: #B3B3B3;
+   background-color: #626262; /* Une couleur de fond pour le corps */
+ 
+   /*background-repeat: repeat-x; /* Une petite image de fond qui se répètera horizontalement en haut */
+   
+   border: 2px solid black; /* Une bordure pour bien marquer les limites du corps et pour faire joli */
+   
+ 
+   
+}
+
+.div_image
+{
+margin:5px;
+border:1px solid green;
+float:left;
+}
+
+.couleur_bleue{
+ color: blue;
+}
+
+.couleur_blanc{
+color: white;
+}
+
+
+.couleur_jaune{
+color: yellow;
+}
+
+.jaune_gras{
+color: yellow;
+font-weight: bold;
+
+}
+
+.page_gras{
+color: yellow;
+font-weight: bold;
+
+}
+
+.blanc_gras{
+color: white;
+font-weight: bold;
+
+}
+
+.texte_gras{
+font-weight: bold;
+
+}
+
+/* Quelques effets sur les menus */
+
+
+.element_menu h3 /* Tous les titres de menus */
+{    
+   color: #B3B3B3;
+   font-family: Arial, "Arial Black", "Times New Roman", Times, serif;
+   text-align: center;
+}
+
+.element_menu ul /* Toutes les listes à puces se trouvant dans un menu */
+{
+   list-style-image: url("images/puce.png"); /* On change l'apparence des puces */
+   padding: 0px; /* Tous les côtés ont une marge intérieure de 0 pixels */
+   padding-left: 20px; /* ... mais on modifie ensuite la marge de gauche, donc celle-là fera finalement 20 pixels */
+   margin: 0px; /* Idem pour margin, ça nous évite d'avoir à en écrire 4 (margin-left, margin-right...) */
+   margin-bottom: 5px; /* Même chose que tout à l'heure, on modifie ensuite juste margin-bottom, mais tous les autres sont à 0px */
+}
+
+.element_menu a /* Tous les liens se trouvant dans un menu */
+{
+   color: #B3B3B3;
+}
+
+.element_menu a:hover /* Quand on pointe sur un lien du menu */
+{
+   background-color: #B3B3B3;
+   color: black;
+}
+
+
+
+/* Le corps de la page */
+
+
+
+#corps h1 /* Tous les titres h1 du corps */
+{
+   color: #B3B3B3;
+   text-align: center;
+   font-family: Arial, "Arial Black", "Times New Roman", Times, serif;
+}
+
+#corps h2 /* Tous les titres h2 du corps */
+{
+   height: 30px;
+
+   background-image: url("images/titre.png"); /* Une petite image de fond sur les titres h2 */
+   background-repeat: no-repeat; /* L'image ne se répètera pas, elle sera à gauche du titre */
+   
+   padding-left: 30px;
+   color: #B3B3B3;
+   text-align: left;
+}
+ 
+
+/* Le pied de page (qui se trouve tout en bas, en général pour les copyrights) */
+
+#footer
+{
+	width: 100%;
+   padding: 5px;
+   clear: both;
+
+   text-align: center;
+
+   color: #B3B3B3;
+   background-color: #626262;
+   background-image: url("images/motif.png");
+   background-repeat: repeat-x;
+   
+   border: 2px solid black;
+}
+
+
+.wt-wait {
+	/*background-color: transparent !important;*/
+	 background-color: black; 
+ filter:alpha(opacity=50);-moz-opacity:.50;opacity:.50; 
+	
+	
+	/*background-image: url(../img/loading-big.gif) !important;*/
+	/*background-repeat: no-repeat !important;*/
+	background-position: center center !important;
+	position : absolute;
+	border: none !important;
+	width:	100% !important;
+	height: 100%  !important;
+ display: table-cell; 
+    text-align: center;    
+    z-index: 2;
+}
+
+.modal-dialogBox
+{
+	background-color			:	#ff0;
+	font-size					:	90%;
+	font-weight					:	bold;
+	border-bottom				:	3px solid #009;
+	padding						:	5px;
+	text-align					:	center;
+	cursor						:	move;
+	vertical-align: middle; 
+        margin-top : 200px;
+        position : absolute;
+        z-index: 1;
+       
+	 	
+}
+
+.centered { 
+    display: table-cell; 
+    vertical-align: middle; 
+        margin-top : 200px;
+}
+
+
+
+
+
+
