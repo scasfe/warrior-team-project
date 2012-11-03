@@ -1,0 +1,256 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>warriorteam-parent</artifactId>
+		<groupId>cr.fr.warriorteam</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cr.fr.warriorteam</groupId>
+	<artifactId>warriorteam-web</artifactId>
+	<packaging>war</packaging>
+	<name>WarriorTeam Web</name>
+	<description>Module web</description>
+
+	<dependencies>
+
+		<!-- <dependency>
+			<groupId>cr.fr.warriorteam</groupId>
+			<artifactId>wt-service</artifactId>
+			<version>${project.version}</version>
+		</dependency> -->
+
+
+		<!-- <dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+			<scope>provided</scope>
+		</dependency> -->
+
+
+
+		<!-- GWT/GXT, pureMVC -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>2.5.0-rc2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>2.5.0-rc2</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.extjs</groupId>
+			<artifactId>gxt</artifactId>
+			<version>${gxt.version}</version>
+		</dependency> -->
+
+		<!-- Pour gÃ©rer l'upload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency>
+		
+		<!--  Pour les connections MySQL -->
+		<dependency>
+			<groupId>mysql-connector-java</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		
+
+		<!-- Pour les test JUnit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+
+
+		<!-- <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jxls</groupId>
+			<artifactId>jxls-core</artifactId>
+		</dependency> -->
+
+	</dependencies>
+
+	<build>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/*.xml</exclude>
+					<exclude>**/*.properties</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<plugins>
+
+			<!-- Compilation definitions -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<!-- <execution>
+						La generation des ressources statiques
+						<id>statique-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<inherited>true</inherited>
+						<configuration>
+							<descriptors>
+								<descriptor>src/main/assembly/web-statique.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution> -->
+					<!-- <execution>
+						La generation du jar du web : on utilise le "plugin assembly" pour qu'il depose le jar dans artifactory.
+						En effet, le "plugin install" ne le depose que dans le repository maven local
+						<id>web-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<inherited>true</inherited>
+						<configuration>
+							<appendAssemblyId>false</appendAssemblyId> 
+							<descriptors>
+								<descriptor>src/main/assembly/web-jar.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution> -->
+				</executions>
+			</plugin>	
+		
+			<plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>gwt-maven-plugin</artifactId>
+		        <version>2.5.0-rc2</version>
+		        <dependencies>
+		          <dependency>
+		            <groupId>com.google.gwt</groupId>
+		            <artifactId>gwt-user</artifactId>
+		            <version>2.5.0-rc2</version>
+		          </dependency>
+		          <dependency>
+		            <groupId>com.google.gwt</groupId>
+		            <artifactId>gwt-dev</artifactId>
+		            <version>2.5.0-rc2</version>
+		          </dependency>
+		        </dependencies>
+		        <configuration>        
+		      		<htmlunit>IE8</htmlunit>
+		   		</configuration>
+		        <executions>
+		          <execution>
+		            <goals>
+		              <goal>compile</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+		      </plugin>
+
+		</plugins>
+	</build>
+
+	<profiles>
+
+		<profile>
+			<id>env-prod</id>
+			<build>
+				<plugins>
+
+					<!-- utile uniquement si packaging avec eclipse des lors qu'on package 
+						en IC sur un serveur ce probleme n'en est plus un -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>delete-hosted-compile</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<inherited>true</inherited>
+								<configuration>
+									<tasks>
+										<echo message="Suppression des compilations GXT locales ${project.name}" />
+										<delete includeemptydirs="true" dir="src/main/webapp/wt" failonerror="false" />
+										 <delete file="${project.build.directory}/classes/wt-external.properties"/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- GWT Maven plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<version>${gwt-maven-plugin.version}</version>
+						<dependencies>
+							<dependency>
+								<groupId>com.google.gwt</groupId>
+								<artifactId>gwt-user</artifactId>
+								<version>2.5.0-rc2</version>
+							</dependency>
+							<dependency>
+								<groupId>com.google.gwt</groupId>
+								<artifactId>gwt-dev</artifactId>
+								<version>2.5.0-rc2</version>
+							</dependency>
+						</dependencies>
+						<!-- <configuration>
+							<module>cr.fr.warriorteam.web.WTWeb</module>
+							<workDir>/appli/pic/gwt/tmp</workDir>
+							<jvm>/usr/java/jre/bin/sparcv9/java</jvm>
+							<style>OBF</style>
+							<extraJvmArgs>-XX:-UseGCOverheadLimit -Xmx1024m</extraJvmArgs>
+						</configuration> -->
+						<executions>
+							<execution>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
