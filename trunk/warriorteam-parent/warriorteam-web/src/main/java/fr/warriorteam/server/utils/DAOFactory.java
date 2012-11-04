@@ -28,9 +28,9 @@ public class DAOFactory {
 			// String user = "root";
 			// String passwd = "";
 
-			String url = PropertiesUtils.getProperties("url-db");
-			String user = PropertiesUtils.getProperties("user-db");
-			String passwd = PropertiesUtils.getProperties("pwd-db");
+			String url = PropertiesUtils.getProperties("datasource.url");
+			String user = PropertiesUtils.getProperties("datasource.user");
+			String passwd = PropertiesUtils.getProperties("datasource.password");
 
 			connection = DriverManager.getConnection(url, user, passwd);
 
@@ -46,8 +46,8 @@ public class DAOFactory {
 		}
 
 		if (connection == null) {
-			logger.error("La connection SQL n'a pas pu être obtenue !");
-			throw new IllegalArgumentException("Problème interne du serveur");
+			logger.error("La connection SQL n'a pas pu ï¿½tre obtenue !");
+			throw new IllegalArgumentException("Problï¿½me interne du serveur");
 		}
 
 		//logger.debug(msg.toString());
