@@ -45,9 +45,12 @@
 		
 		
 		<!-- proprietes pour les devpts -->
-		<server.datasource.wt.url>jdbc:oracle:thin:@localhost:1521:xe</server.datasource.wt.url>
-		<server.datasource.wt.user>wt_dev</server.datasource.wt.user>
-		<server.datasource.wt.password>wt_dev</server.datasource.wt.password>
+		<server.datasource.wt.url> jdbc:mysql://localhost/warriorteam</server.datasource.wt.url>
+		<server.datasource.wt.user>root</server.datasource.wt.user>
+		<server.datasource.wt.password></server.datasource.wt.password>
+		
+		<!-- Log4j fichier de logs en environnement local -->
+		<log4j.file.path>C:/logs/warriorteam_%date%.log</log4j.file.path> 
 
 	</properties>
 <!-- 
@@ -67,6 +70,7 @@
 		<module>wt-mock</module>
 		<module>wt-mock-ear</module>
 		<module>wt-tools</module> -->
+		<module>warriorteam-batch</module>
 	</modules>
 
 
@@ -424,6 +428,8 @@
 				<!-- emplacement des properties externes de l'application -->
 				<wt.external.properties.conf.path>/appli/projects/wt/config/files</wt.external.properties.conf.path>
 
+				<!-- Path du log4j file de prod -->
+				<log4j.file.path>/var/projects/wt/logs/warriorteam_%date%.log</log4j.file.path> 
 
 				<!-- configuration data source -->
 				<wt.datasource.config.file>data-source.xml</wt.datasource.config.file>
