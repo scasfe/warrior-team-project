@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+				http://www.springframework.org/schema/aop http://www.springframework.org/schema/tx/spring-aop-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+<!-- 
+      Si default-autowire=byName dans le tag beans alors if faudrait preciser autowire=no dans le bean "schedulerFactoryBean"
+	  En effet, lorsq'une dataSource est défini dans le projet, il est utile de mentionner l'option autowire="no" pr conserver l option par defaut RAMJobStore. 
+	  NOTA: RAMJobStore est l option par defaut à moins qu'une datasource soit définie dans le projet.. 
+-->
+<!-- Configuration de Quartz  -->    
+<!-- property name="concurrent" value="false" utile lorsque deux triggers sont specifiés pour ce job car QuartzJob is stateless  -->
+<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+  <property name="targetObject" ref="myService"/>
+  <property name="targetMethod" value="getClient"/>
+  <property  name="arguments">
+    <list>
+     <value>nom007</value>
+     <value>prenom007</value>
+    </list>
+  </property>
+  <property name="concurrent" value="false"/>   
+</bean><bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean" >
+	<property name="jobDetail" ref="jobDetail" />
+	<property name="cronExpression" value="0/20 * * * * ? * *" />
+</bean>
+	<!-- 
+	Cron-Expressions are used to configure instances of CronTrigger. Cron-Expressions are strings that are actually made up of seven sub-expressions, that describe individual details of the schedule. These sub-expression are separated with white-space, and represent:
+   1. Seconds    2. Minutes     3. Hours   4. Day-of-Month  
+   5. Month  6. Day-of-Week   7. Year (optional field)
+ An example of a complete cron-expression is the string "0 0 12 ? * WED" - which means "every Wednesday at 12:00 pm".  Example Cron Expressions
+ CronTrigger Ex1 - an expression to create a trigger that simply fires every 5 minutes from Saturday to Sunday "0 0/5 * * SAT-SUN ?"
+ CronTrigger Ex2 - an expression to create a trigger that fires every 5 minutes, at 10 sec after the minute (i.e. 10:00:10 am, 10:05:10 am, etc.). "10 0/5 * * * ?"
+ CronTrigger Ex3 - an expression to create a trigger that fires at 10:30, 11:30, 12:30, and 13:30, on every Wednesday and Friday."0 30 10-13 ? * WED,FRI"
+ CronTrigger Ex4 - an expression to create a trigger that fires every half hour between the hours of 8 am and 10 am on the 5th and 20th of every month.
+Note that the trigger will NOT fire at 10:00 am, just at 8:00, 8:30, 9:00 and 9:30 "0 0/30 8-9 5,20 * ?"
+-->
+  <bean id="jobFactory" class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
+ 
+  <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no">
+	<property name="triggers">
+	<list><ref bean="cronTrigger" /></list>
+	</property>
+	 <property name="jobFactory" ref="jobFactory" />
+  </bean>
+</beans>
