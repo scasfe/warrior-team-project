@@ -8,8 +8,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import fr.warriorteam.client.pane.CenterPane;
-import fr.warriorteam.client.pane.FooterPane;
 import fr.warriorteam.client.pane.HeaderPane;
 
 /**
@@ -72,11 +70,11 @@ public class AccueilPane extends DockPanel {
 
 		// Centre de la page :
 
-		RootPanel.get().add(CenterPane.getInstance());
-
-		// Footer de la page
-
-		RootPanel.get().add(FooterPane.getInstance());
+//		RootPanel.get().add(CenterPane.getInstance());
+//
+//		// Footer de la page
+//
+//		RootPanel.get().add(FooterPane.getInstance());
 
 	}
 
