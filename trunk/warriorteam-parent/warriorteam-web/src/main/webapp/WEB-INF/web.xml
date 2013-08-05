@@ -9,49 +9,19 @@
   
   <servlet>
 		<servlet-name>context</servlet-name>
-		<servlet-class> fr.warriorteam.server.servlet.ContextLoaderServlet</servlet-class>
+		<servlet-class>fr.warriorteam.server.servlet.WTContextLoaderServlet</servlet-class>
 		<!-- ordre de chargement : AVANT "WtStartupServlet" -->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
   
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>fr.warriorteam.rpc.impl.LoginServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/warriorteam/greet</url-pattern>
-  </servlet-mapping>
-  
     <servlet>
     <servlet-name>newsServlet</servlet-name>
-    <servlet-class>fr.warriorteam.rpc.impl.NewsServiceImpl</servlet-class>
+    <servlet-class>fr.warriorteam.server.rpc.RpcNewsServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
     <servlet-name>newsServlet</servlet-name>
     <url-pattern>/warriorteam/news</url-pattern>
-  </servlet-mapping>
-  
-      <servlet>
-    <servlet-name>uploadServlet</servlet-name>
-    <servlet-class>fr.warriorteam.rpc.impl.FileUploadServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>uploadServlet</servlet-name>
-    <url-pattern>/warriorteam/upload</url-pattern>
-  </servlet-mapping>
-  
-        <servlet>
-    <servlet-name>categorieServlet</servlet-name>
-    <servlet-class>fr.warriorteam.rpc.impl.CategorieServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>categorieServlet</servlet-name>
-    <url-pattern>/warriorteam/categorie</url-pattern>
   </servlet-mapping>
   
   <servlet> 
