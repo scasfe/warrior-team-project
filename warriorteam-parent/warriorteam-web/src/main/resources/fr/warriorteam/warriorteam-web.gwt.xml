@@ -11,7 +11,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
-
+<inherits name="fr.cr.warriorteam.common.WTCommon"/>
   <!-- Other module inherits                                      -->
 
   <!-- Specify the app entry point class.                         -->
@@ -19,6 +19,7 @@
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
+  <source path='client/rpc'/>
   <source path='client/center'/>
   <source path='rpc'/>
   <source path='rpc/dto'/>
@@ -26,6 +27,7 @@
   <source path='server/utils'/>
    <source path='server/exception'/>
   <source path='utils'/>
+ 
 
  <!-- Specify the paths for the CSS                -->
 <stylesheet src='Warriorteam.css'/>
