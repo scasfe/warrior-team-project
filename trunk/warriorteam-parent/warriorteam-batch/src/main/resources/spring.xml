@@ -9,9 +9,9 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"
 		default-autowire="byName">
 	
-	<context:component-scan base-package="springquartz.dao"/>
-        <context:component-scan base-package="springquartz.service"/>
-	<bean id="dataSource" 
+	<context:component-scan base-package="dao"/>
+        <context:component-scan base-package="service"/>
+<!-- 	<bean id="dataSource" 
 		class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName"
 			value="com.mysql.jdbc.Driver">
@@ -21,5 +21,6 @@
 		</property>
 		<property name="username" value="root"></property>
 		<property name="password" value=""></property>
-	</bean>
+	</bean> -->
+	<import resource="classpath:/fr/cr/warriorteam/common/commun-context.xml" />
 </beans>

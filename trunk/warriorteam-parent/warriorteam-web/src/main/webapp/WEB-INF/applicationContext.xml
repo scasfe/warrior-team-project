@@ -12,7 +12,7 @@
 	<context:annotation-config />
 
 
-	<import resource="classpath:/cr/fr/warriorteam/common/commun-context.xml" />
+	<import resource="classpath:/fr/cr/warriorteam/common/commun-context.xml" />
 
 	<!--	Scan des packages qui doivent etre instrumentés par Spring-->
 	<context:component-scan base-package="fr.warriorteam.server" />

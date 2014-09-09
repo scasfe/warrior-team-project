@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<tx:annotation-driven />
+	<context:annotation-config />
+	<context:spring-configured />
+
+	<context:component-scan base-package="fr.cr.warriorteam.common" />
+
+	<!--	La data source suivant l'evironnement  -->
+	<!-- <import resource="classpath:/fr/edf/jet7/common/data-source-eclipse.xml" />  -->
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:hibernate.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="defaultLobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" />
+
+
+	<bean id="WTHibernateProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.connection.pool_size">${hibernate.connection.pool_size}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="lobHandler" ref="defaultLobHandler"/>
+		<property name="annotatedClasses">
+			<list>
+
+				<value>fr.cr.warriorteam.common.model.entity.Stock</value>
+
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<ref bean="WTHibernateProperties" />
+		</property>
+		 
+		<property name="dataSource">
+			<ref bean="dataSource"  />
+		</property>
+
+	<!-- 	<property name="eventListeners">
+			<map>
+				<entry key="merge">
+					<ref local="merge" />
+				</entry>
+			</map>
+		</property>
+ -->
+	</bean>
+
+	<!-- <bean id="merge"
+		class="fr.edf.jet7.common.utils.hibernate.listeners.J7MergeEventListener" />
+ -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager" >
+		<property name="entityInterceptorBeanName" value="WTInterceptor">
+		</property>
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+
+	
+	<!--  Interceptor hibernate -->
+	<bean id="WTInterceptor" name="WTInterceptor" class="fr.cr.warriorteam.common.utils.hibernate.WTInterceptor" scope="prototype"/>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+	    p:driverClassName="${hibernate.connection.driver_class}" p:url="${hibernate.connection.url}" p:username="${hibernate.connection.username}" p:password="${hibernate.connection.password}" primary="false" />
+
+		<bean id="jdbcExceptionTranslator"
+		class="org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+		<property name="jdbcExceptionTranslator">
+			<ref bean="jdbcExceptionTranslator" />
+		</property>
+	</bean>
+
+	<!--  parties springbatch communes -->
+	<!-- <import resource="classpath:/fr/edf/jet7/common/imports/etude-offeli-reader.xml" /> -->
+
+</beans>
