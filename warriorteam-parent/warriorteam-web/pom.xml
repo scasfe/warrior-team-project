@@ -232,13 +232,10 @@
 								<version>2.5.0-rc2</version>
 							</dependency>
 						</dependencies>
-						<!-- <configuration>
-							<module>cr.fr.warriorteam.web.WTWeb</module>
-							<workDir>/appli/pic/gwt/tmp</workDir>
-							<jvm>/usr/java/jre/bin/sparcv9/java</jvm>
-							<style>OBF</style>
+						<configuration>
+							<module>fr.warriorteam.warriorteam-web</module>
 							<extraJvmArgs>-XX:-UseGCOverheadLimit -Xmx1024m</extraJvmArgs>
-						</configuration> -->
+						</configuration>
 						<executions>
 							<execution>
 								<goals>
