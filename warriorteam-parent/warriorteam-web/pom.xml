@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
-			<version>2.5.0-rc2</version>
+			<version>2.6.1-rc2</version>
 		</dependency>
 		<!-- <dependency>
 			<groupId>com.extjs</groupId>
@@ -156,97 +156,43 @@
 			<plugin>
 		        <groupId>org.codehaus.mojo</groupId>
 		        <artifactId>gwt-maven-plugin</artifactId>
-		        <version>2.5.0-rc2</version>
+		        <version>2.6.1-rc2</version>
+		        
+		        
 		        <dependencies>
 		          <dependency>
 		            <groupId>com.google.gwt</groupId>
 		            <artifactId>gwt-user</artifactId>
-		            <version>2.5.0-rc2</version>
+		            <version>2.6.1-rc2</version>
 		          </dependency>
 		          <dependency>
 		            <groupId>com.google.gwt</groupId>
 		            <artifactId>gwt-dev</artifactId>
-		            <version>2.5.0-rc2</version>
+		            <version>2.6.1-rc2</version>
 		          </dependency>
 		        </dependencies>
-		        <configuration>        
+		       <!--  <configuration>        
 		      		<htmlunit>IE8</htmlunit>
-		   		</configuration>
+		   		</configuration> -->
 		        <executions>
 		          <execution>
+		           <configuration>
+              <module>fr.warriorteam.warriorteam-web</module>
+             <!--  <module>fr.cr.warriorteam.common.WTCommon</module> -->
+              <logLevel>DEBUG</logLevel>
+              <extraJvmArgs>-Xmx512M -Xss1024k </extraJvmArgs>
+            </configuration>
 		            <goals>
 		              <goal>compile</goal>
+		              <!-- <goal>generateAsync</goal> -->
 		            </goals>
+		           
 		          </execution>
 		        </executions>
+		        
 		      </plugin>
 
 		</plugins>
 	</build>
-
-	<profiles>
-
-		<profile>
-			<id>env-prod</id>
-			<build>
-				<plugins>
-
-					<!-- utile uniquement si packaging avec eclipse des lors qu'on package 
-						en IC sur un serveur ce probleme n'en est plus un -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>delete-hosted-compile</id>
-								<phase>compile</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<inherited>true</inherited>
-								<configuration>
-									<tasks>
-										<echo message="Suppression des compilations GXT locales ${project.name}" />
-										<delete includeemptydirs="true" dir="src/main/webapp/wt" failonerror="false" />
-										 <delete file="${project.build.directory}/classes/wt-external.properties"/>
-									</tasks>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
-					<!-- GWT Maven plugin -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>gwt-maven-plugin</artifactId>
-						<version>${gwt-maven-plugin.version}</version>
-						<dependencies>
-							<dependency>
-								<groupId>com.google.gwt</groupId>
-								<artifactId>gwt-user</artifactId>
-								<version>2.5.0-rc2</version>
-							</dependency>
-							<dependency>
-								<groupId>com.google.gwt</groupId>
-								<artifactId>gwt-dev</artifactId>
-								<version>2.5.0-rc2</version>
-							</dependency>
-						</dependencies>
-						<configuration>
-							<module>fr.warriorteam.warriorteam-web</module>
-							<extraJvmArgs>-XX:-UseGCOverheadLimit -Xmx1024m</extraJvmArgs>
-						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>compile</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 </project>

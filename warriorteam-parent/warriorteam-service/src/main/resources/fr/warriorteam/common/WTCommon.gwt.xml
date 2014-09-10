@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<!-- <source path="model/entity" excludes="**/fichier/NoBinaire*.java,**/fichier/INoBinaire.java" />
+	 -->
+	  <inherits name='com.google.gwt.user.User' />
+	 
+	
+	 <source path='model/entity' />
+	 
+	<!-- <source path="model/dto" excludes="**/cache/AdminArenhCacheData.java" />
+	<source path="model/vo" />
+	<source path="cloe/mapping" includes="ICloeMappable.java" />
+	<source path="utils/web" /> -->
+	
+</module>

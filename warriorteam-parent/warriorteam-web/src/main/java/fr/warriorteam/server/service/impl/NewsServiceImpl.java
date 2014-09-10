@@ -3,7 +3,7 @@ package fr.warriorteam.server.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fr.cr.warriorteam.common.model.entity.Stock;
+import fr.warriorteam.common.model.entity.Stock;
 import fr.warriorteam.dto.NewsResultDTO;
 import fr.warriorteam.server.dao.WebGenericDao;
 import fr.warriorteam.server.service.NewsService;
@@ -39,7 +39,7 @@ public class NewsServiceImpl implements NewsService {
 		System.out.println("Done");
 
 		NewsResultDTO dto = new NewsResultDTO();
-		dto.setStock(stock);
+		// dto.setStock(stock);
 
 		return dto;
 

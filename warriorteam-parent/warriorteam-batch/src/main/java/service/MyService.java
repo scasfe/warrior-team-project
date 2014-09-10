@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import dao.GenericDao;
 import dao.IDao;
-import fr.cr.warriorteam.common.model.entity.Stock;
+import fr.warriorteam.common.model.entity.Stock;
 
 @Service()
 public class MyService {

@@ -9,49 +9,43 @@ import fr.warriorteam.dto.NewsResultDTO;
 import fr.warriorteam.server.service.NewsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"/applicationContext.xml"})
+@ContextConfiguration(locations = { "/applicationContext.xml" })
 public class Test {
 
-        @Autowired
-        NewsService service;
+	@Autowired
+	NewsService service;
 
-        @org.junit.Test
-        public void test() {
-        	
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("Début du test");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	
-        	assertNotNull(service); 
-            
-        	
-        	NewsResultDTO dto; 
-        	
-        	dto = service.processSuccess();
-     
-        	assertNotNull(dto.getStock()); 
-        	
-        
-     
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("Fin du test");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	System.out.println("****************************************");
-        	
-        	
-            
-        }
+	@org.junit.Test
+	public void test() {
 
-        
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("Début du test");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+
+		assertNotNull(service);
+
+		NewsResultDTO dto;
+
+		dto = service.processSuccess();
+
+		// assertNotNull(dto.getStock());
+
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("Fin du test");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+		System.out.println("****************************************");
+
+	}
+
 }
