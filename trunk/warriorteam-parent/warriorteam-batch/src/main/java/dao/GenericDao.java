@@ -1,6 +1,6 @@
 package dao;
 
-import fr.cr.warriorteam.common.dao.StockDao;
+import fr.warriorteam.common.dao.StockDao;
 
 public interface GenericDao extends StockDao {
 

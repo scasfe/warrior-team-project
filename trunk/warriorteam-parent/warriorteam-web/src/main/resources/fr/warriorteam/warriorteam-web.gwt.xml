@@ -11,8 +11,12 @@
   <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
- <inherits name='fr.cr.warriorteam.common.WTCommon'/> 
+  <inherits name="com.google.gwt.i18n.I18N" />
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+ 
   <!-- Other module inherits                                      -->
+ <inherits name='fr.warriorteam.common.WTCommon'/>
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='fr.warriorteam.client.Warriorteam'/>
@@ -28,7 +32,7 @@
    <source path='server/exception'/>
   <source path='utils'/>
  
-
+  
  <!-- Specify the paths for the CSS                -->
 <stylesheet src='Warriorteam.css'/>
 
