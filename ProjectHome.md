@@ -1,0 +1,1 @@
+Il s'agit d'un programme développé en Java grâce au plugin GWT de Google, permettant d'échanger des photos et de partager des évènements entre amis dans un cercle privé.
